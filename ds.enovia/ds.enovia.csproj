@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Dassault Systèmes - EMED CPE</Authors>
+    <Version>2.0.0</Version>
+    <Company>Dassault Systèmes</Company>
+    <Description>3DEXPERIENCE Dotnet Core SDK for Enovia (base) web services</Description>
+    <Copyright>Copyright ©  2021</Copyright>
+    <PackageLicenseUrl>https://mit-license.org/</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/nogueiraantonio/ds3dx-api-dotnet-core</PackageProjectUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>Upgrade of the ds.enovia project to .NET standard 2.0</PackageReleaseNotes>
+    <PackageTags>3DEXPERIENCE</PackageTags>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>ds.enovia.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+    <PackageReference Include="System.Text.Json" Version="5.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ds.authentication\ds.authentication.csproj" />
+    <ProjectReference Include="..\ds.enovia.common\ds.enovia.common.csproj" />
+  </ItemGroup>
+
+</Project>

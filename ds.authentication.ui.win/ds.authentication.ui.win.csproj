@@ -1,0 +1,109 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Version>1.0.1</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Authors>Dassault Systèmes - EMED CPE</Authors>
+    <Company>Dassault Systèmes</Company>
+    <Description>Authentication UI for Windows</Description>
+    <PackageLicenseFile>MITLicense.md</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</RepositoryUrl>
+    <PackageTags>3DEXPERIENCE</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Update="ui.win\AgentAuthenticationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="ui.win\AgentAuthenticationForm.Designer.cs">
+      <DependentUpon>AgentAuthenticationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Update="ui.win\AuthenticationForm .cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="ui.win\AuthenticationForm .Designer.cs">
+      <DependentUpon>AuthenticationForm .cs</DependentUpon>
+    </Compile>
+    <Compile Update="ui.win\AuthenticationSelectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="ui.win\AuthenticationSelectionForm.Designer.cs">
+      <DependentUpon>AuthenticationSelectionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Update="ui.win\BatchServiceAuthenticationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="ui.win\BatchServiceAuthenticationForm.Designer.cs">
+      <DependentUpon>BatchServiceAuthenticationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Update="ui.win\SecurityContextSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="ui.win\SecurityContextSelection.Designer.cs">
+      <DependentUpon>SecurityContextSelection.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+	<ItemGroup>
+	  <None Update="Properties\Settings.settings">
+		<Generator>SettingsSingleFileGenerator</Generator>
+		<LastGenOutput>Settings.Designer.cs</LastGenOutput>
+	  </None>
+	  <Compile Update="Properties\Settings.Designer.cs">
+		<AutoGen>True</AutoGen>
+		<DependentUpon>Settings.settings</DependentUpon>
+		<DesignTimeSharedInput>True</DesignTimeSharedInput>
+	  </Compile>
+	</ItemGroup>
+
+
+  <ItemGroup>
+    <EmbeddedResource Update="ui.win\AgentAuthenticationForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>AgentAuthenticationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ui.win\AuthenticationForm .resx">
+      <DependentUpon>AuthenticationForm .cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ui.win\AuthenticationSelectionForm.resx">
+      <DependentUpon>AuthenticationSelectionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ui.win\BatchServiceAuthenticationForm.resx">
+      <DependentUpon>BatchServiceAuthenticationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ui.win\SecurityContextSelection.resx">
+      <DependentUpon>SecurityContextSelection.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+	  <EmbeddedResource Update="Properties\Resources.resx">
+		<Generator>ResXFileCodeGenerator</Generator>
+		<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	  <Compile Update="Properties\Resources.Designer.cs">
+		<AutoGen>True</AutoGen>
+		<DependentUpon>Resources.resx</DependentUpon>
+		<DesignTime>True</DesignTime>
+	  </Compile>
+	</ItemGroup>
+
+  
+
+  <ItemGroup>
+    <None Include="..\MITLicense.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  
+
+  <ItemGroup>
+    <PackageReference Include="ds.authentication" Version="2.0.1" />
+    <PackageReference Include="ds.enovia" Version="2.0.2" />
+  </ItemGroup>
+
+</Project>

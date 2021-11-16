@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>Dassault Systèmes - EMED CPE</Authors>
+    <Company>Dassault Systèmes</Company>
+    <Description>3DEXPERIENCE Enterprise Integration Framework Dotnet wrapper classes</Description>
+    <Copyright>Copyright ©  2021</Copyright>
+    <PackageLicenseFile>MITLicense.md</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/nogueiraantonio/ds3dx-api-dotnet-core</PackageProjectUrl>
+    <PackageTags>3DEXPERIENCE EIF</PackageTags>
+    <Version>1.0.1</Version>
+    <PackageReleaseNotes>fix: Deserialization of Message</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="5.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\MITLicense.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

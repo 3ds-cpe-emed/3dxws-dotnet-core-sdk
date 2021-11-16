@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>ds.authentication.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Authors>Dassault Systèmes - EMED CPE</Authors>
+    <Company>Dassault Systèmes</Company>
+    <Copyright>Copyright ©  2021</Copyright>
+    <Version>2.0.0</Version>
+    <PackageLicenseUrl>https://mit-license.org/</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/nogueiraantonio/ds3dx-api-dotnet-core</PackageProjectUrl>
+    <PackageTags>3DEXPERIENCE</PackageTags>
+    <PackageReleaseNotes>Upgrade of the ds.authentication 1.x.x project to .NET standard 2.0</PackageReleaseNotes>
+    <Product>ds.authentication</Product>
+    <Description>3DEXPERIENCE Dotnet Core SDK for Authentication web services</Description>
+    <PackageId>ds.authentication</PackageId>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+    <PackageReference Include="System.Text.Json" Version="5.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ds.enovia.common\ds.enovia.common.csproj" />
+  </ItemGroup>
+
+</Project>
