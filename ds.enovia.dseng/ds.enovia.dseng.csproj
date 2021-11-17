@@ -6,7 +6,7 @@
     <AssemblyOriginatorKeyFile>ds.enovia.dseng.snk</AssemblyOriginatorKeyFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>2.0.7</Version>
+    <Version>2.0.8</Version>
     <Authors>Dassault Systèmes - EMED CPE</Authors>
     <Company>Dassault Systèmes</Company>
     <Description>3DEXPERIENCE Dotnet Core SDK for Engineering Items web services
@@ -15,7 +15,7 @@
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/nogueiraantonio/ds3dx-api-dotnet-core</PackageProjectUrl>
     <PackageTags>3DEXPERIENCE</PackageTags>
-    <PackageReleaseNotes>add: simplification of interface to read, create and update part number</PackageReleaseNotes>
+    <PackageReleaseNotes>fix: nuget version conflict</PackageReleaseNotes>
     <PackageLicenseFile>MITLicense.md</PackageLicenseFile>
   </PropertyGroup>
 
