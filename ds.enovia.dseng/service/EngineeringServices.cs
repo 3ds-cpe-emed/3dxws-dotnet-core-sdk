@@ -158,9 +158,14 @@ namespace ds.enovia.dseng.service
         #region EnterpriseReference
         public async Task<EnterpriseReference> SetEnterpriseReference(EngineeringItem _item, EnterpriseReferenceCreate _itemNumber)
         {
-            string setEnterpriseRefEndpoint = string.Format("{0}/{1}{2}", GetBaseResource(), _item.id, ENTERPRISE_REFERENCE);
+            return await SetEnterpriseReference(_item.id, _itemNumber);
+        }
 
-            string payload = _itemNumber.toJson();
+        public async Task<EnterpriseReference> SetEnterpriseReference(string _itemId, EnterpriseReferenceCreate _itemNumber)
+        {
+            string setEnterpriseRefEndpoint = string.Format("{0}/{1}{2}", GetBaseResource(), _itemId, ENTERPRISE_REFERENCE);
+
+            string payload = JsonSerializer.Serialize(_itemNumber);
 
             HttpResponseMessage requestResponse = await PostAsync(setEnterpriseRefEndpoint, null, null, payload);
 
@@ -179,9 +184,15 @@ namespace ds.enovia.dseng.service
             return null;
 
         }
+        
         public async Task<EnterpriseReference> GetEnterpriseReference(EngineeringItem _item)
         {
-            string getEnterpriseRefEndpoint = string.Format("{0}/{1}{2}", GetBaseResource(), _item.id, ENTERPRISE_REFERENCE);
+            return await GetEnterpriseReference(_item.id);
+        }
+
+        public async Task<EnterpriseReference> GetEnterpriseReference(string _itemId)
+        {
+            string getEnterpriseRefEndpoint = string.Format("{0}/{1}{2}", GetBaseResource(), _itemId, ENTERPRISE_REFERENCE);
 
             HttpResponseMessage requestResponse = await GetAsync(getEnterpriseRefEndpoint);
 
@@ -194,20 +205,25 @@ namespace ds.enovia.dseng.service
             EnterpriseReferenceSet enterpriseRefSet =
                 await requestResponse.Content.ReadFromJsonAsync<EnterpriseReferenceSet>();
 
-            if ((enterpriseRefSet != null) && (enterpriseRefSet.totalItems ==1))
+            if ((enterpriseRefSet != null) && (enterpriseRefSet.totalItems == 1))
             {
                 return enterpriseRefSet.member[0];
             }
-            
+
             return null;
         }
 
         //Modifies the Enterprise Reference of an Engineering item
         public async Task<EnterpriseReference> UpdateEnterpriseReference(EngineeringItem _item, EnterpriseReferenceCreate _newRef)
         {
-            string setEnterpriseRefEndpoint = string.Format("{0}/{1}{2}", GetBaseResource(), _item.id, ENTERPRISE_REFERENCE);
+            return await UpdateEnterpriseReference(_item.id, _newRef);
+        }
 
-            string messageBody = _newRef.toJson();
+        public async Task<EnterpriseReference> UpdateEnterpriseReference(string _engItemId, EnterpriseReferenceCreate _newRef)
+        {
+            string setEnterpriseRefEndpoint = string.Format("{0}/{1}{2}", GetBaseResource(), _engItemId, ENTERPRISE_REFERENCE);
+
+            string messageBody = JsonSerializer.Serialize(_newRef);
 
             HttpResponseMessage requestResponse = await PatchAsync(setEnterpriseRefEndpoint, null, null, messageBody);
 
