@@ -18,10 +18,12 @@ using ds.authentication.exception;
 using ds.authentication.model;
 using ds.enovia.common.helper;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace ds.authentication
 {
@@ -73,15 +75,16 @@ namespace ds.authentication
             TicketInfo loginTicketInfo = await GetLoginTicketInfo();
 
             // Step 2 - build the login request
-            UriRelative loginUri = new UriRelative(GetEndpointURL(LOGIN_WS));
+            var nvc = new List<KeyValuePair<string, string>>();
+            nvc.Add(new KeyValuePair<string, string>("lt", loginTicketInfo.lt));
+            nvc.Add(new KeyValuePair<string, string>("username", username));
+            nvc.Add(new KeyValuePair<string, string>("password", password));
+            nvc.Add(new KeyValuePair<string, string>("rememberMe", rememberMe.ToString()));
 
-            loginUri.AddQueryParameter( "lt", loginTicketInfo.lt);
-            loginUri.AddQueryParameter("username", username);
-            loginUri.AddQueryParameter("password", password);
-            loginUri.AddQueryParameter("rememberMe", rememberMe.ToString());
+            string url = $"{GetEndpointURL(LOGIN_WS)}";
 
-            PostHttpJsonMessage loginRequest = new PostHttpJsonMessage(loginUri);
-            
+            HttpRequestMessage loginRequest = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(nvc) };
+
             HttpResponseMessage loginRequestResponse = await Client.SendAsync(loginRequest);
 
             if (!loginRequestResponse.IsSuccessStatusCode)
@@ -93,20 +96,21 @@ namespace ds.authentication
             return IsCookieAuthenticated;
         }
 
-        public async Task<T> CASLoginWithRedirection<T>(string username, string password, bool rememberMe, IPassportServiceRedirection _redir)
+        public async Task<T> CASLoginWithRedirection<T>(string username, string password, bool rememberMe, IPassportServiceRedirection _redir )
         {
             //Step 1 - Request login ticket
             TicketInfo loginTicketInfo = await GetLoginTicketInfo();
 
             // Step 2 - build the login request
-            UriRelative loginUri = new UriRelative(GetEndpointURL(LOGIN_WS));
-            loginUri.AddQueryParameter("service", _redir.GetServiceURL());
-            loginUri.AddQueryParameter("lt", loginTicketInfo.lt);
-            loginUri.AddQueryParameter("username", username);
-            loginUri.AddQueryParameter("password", password);
-            loginUri.AddQueryParameter("rememberMe", rememberMe.ToString());
+            var nvc = new List<KeyValuePair<string, string>>();
+            nvc.Add(new KeyValuePair<string, string>("lt", loginTicketInfo.lt));
+            nvc.Add(new KeyValuePair<string, string>("username", username));
+            nvc.Add(new KeyValuePair<string, string>("password", password));
+            nvc.Add(new KeyValuePair<string, string>("rememberMe", rememberMe.ToString()));
 
-            PostHttpJsonMessage loginRequest = new PostHttpJsonMessage(loginUri);
+            string url = $"{GetEndpointURL(LOGIN_WS)}?service={HttpUtility.UrlEncode(_redir.GetServiceURL())}";
+
+            HttpRequestMessage loginRequest = new HttpRequestMessage(HttpMethod.Post, url) { Content = new FormUrlEncodedContent(nvc) };
 
             HttpResponseMessage loginRequestResponse = await Client.SendAsync(loginRequest);
 
