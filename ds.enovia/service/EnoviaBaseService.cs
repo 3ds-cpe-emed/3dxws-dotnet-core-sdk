@@ -57,6 +57,11 @@ namespace ds.enovia.service
 
             string enoviaHost = string.Format("{0}://{1}", enoviaUri.Scheme, enoviaUri.Host);
 
+            if (!enoviaUri.IsDefaultPort)
+            {
+                enoviaHost += $":{enoviaUri.Port}";
+            }
+
             m_enoviaHost = new Uri(enoviaHost);
 
             // Initialize RestClient and Cookie Manager if Cookie Authentication
