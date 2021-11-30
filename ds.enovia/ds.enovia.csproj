@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Dassault Systèmes - EMED CPE</Authors>
-    <Version>2.0.1</Version>
+    <Version>2.0.3</Version>
     <Company>Dassault Systèmes</Company>
     <Description>3DEXPERIENCE Dotnet Core SDK for Enovia (base) web services</Description>
     <Copyright>Copyright ©  2021</Copyright>
@@ -11,7 +11,7 @@
     <PackageProjectUrl>https://github.com/nogueiraantonio/ds3dx-api-dotnet-core</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>fix: custom port was ignored</PackageReleaseNotes>
+    <PackageReleaseNotes>fix: nuget release version</PackageReleaseNotes>
     <PackageTags>3DEXPERIENCE</PackageTags>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ds.enovia.snk</AssemblyOriginatorKeyFile>
