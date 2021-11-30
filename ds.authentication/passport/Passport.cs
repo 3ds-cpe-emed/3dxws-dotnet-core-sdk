@@ -36,7 +36,12 @@ namespace ds.authentication
 
             m_passportService = m_passportUri.LocalPath;
 
-            string passportHost = string.Format("{0}://{1}", m_passportUri.Scheme, m_passportUri.Host);
+            string passportHost = string.Format("{0}://{1}", m_passportUri.Scheme, m_passportUri.Host); ;
+
+            if (!m_passportUri.IsDefaultPort)
+            {
+                passportHost += $":{m_passportUri.Port}";
+            }
 
             m_passportHost = new Uri(passportHost);
 

@@ -9,11 +9,11 @@
     <Authors>Dassault Systèmes - EMED CPE</Authors>
     <Company>Dassault Systèmes</Company>
     <Copyright>Copyright ©  2021</Copyright>
-    <Version>2.0.2</Version>
+    <Version>2.0.3</Version>
     <PackageLicenseUrl>https://mit-license.org/</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/nogueiraantonio/ds3dx-api-dotnet-core</PackageProjectUrl>
     <PackageTags>3DEXPERIENCE</PackageTags>
-    <PackageReleaseNotes>fix: nuget release conflict</PackageReleaseNotes>
+    <PackageReleaseNotes>fix: custom port was ignored</PackageReleaseNotes>
     <Product>ds.authentication</Product>
     <Description>3DEXPERIENCE Dotnet Core SDK for Authentication web services</Description>
     <PackageId>ds.authentication</PackageId>
