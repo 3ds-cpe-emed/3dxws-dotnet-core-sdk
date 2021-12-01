@@ -16,7 +16,6 @@
 
 
 using ds.authentication;
-using ds.enovia.common.helper;
 using ds.enovia.common.search;
 using ds.enovia.document.exception;
 using ds.enovia.document.model;
@@ -25,10 +24,12 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Threading;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ds.enovia.document.service
@@ -363,7 +364,7 @@ namespace ds.enovia.document.service
 
             doc.data.Add(_docData);
 
-            string bodyRequest = doc.toJson();
+            string bodyRequest = JsonSerializer.Serialize(doc);
 
             HttpResponseMessage createDocumentResponse = await PostAsync(GetBaseResource(), null, null, bodyRequest);
 
@@ -399,42 +400,64 @@ namespace ds.enovia.document.service
             string ticket = data.dataelements.ticket;
             string ticketUrl = data.dataelements.ticketURL;
 
-            #region ----
-            //RestRequest request = new RestRequest(ticketUrl, Method.POST);
-            //request.AddParameter(ticketParamName, ticket);
-            //request.AddFile(System.IO.Path.GetFileName(_fileLocalPath), _fileLocalPath);
-
-            //HttpResponseMessage response = await m_client.ExecutePostAsync(request);
-
+            #region Prepare Message Content
+            
             //----
-            string __receipt = null;
-
-            UriRelative requestUri = new UriRelative(ticketUrl);
-            requestUri.AddQueryParameter(ticketParamName, ticket);
-
-            //Using WebClient API for convinience on methods to upload and download
-            using (System.Net.WebClient webClient = new System.Net.WebClient())
+            // Building the request using Multipart Form Data
+            // Create the file content part by copying the file contents
+            var fileContent = new StreamContent(File.OpenRead(_fileLocalPath));
+            fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
             {
-                byte[] responseBytes = await webClient.UploadFileTaskAsync(requestUri, Path.GetFileName(_fileLocalPath));
+                Name = "\"file_0\"",
+                FileName = "\"" + Path.GetFileName(_fileLocalPath) + "\""
+            };
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
 
-                __receipt = System.Text.Encoding.UTF8.GetString(responseBytes);
-            }
+            // Create the ticket content
+            StringContent ticketContent = new StringContent(ticket);
+            ticketContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+            {
+                Name = $"\"{ticketParamName}\""
+            };
+
+            // -----
+            var requestContent = new MultipartFormDataContent();
+            requestContent.Add(ticketContent);
+            requestContent.Add(fileContent);
+
+            //Note: This was VERY hard to find however the 3DEXPERIENCE does not accept double quotes in the boundary
+            //definition... Need to remove them.
+            NameValueHeaderValue boundary = requestContent.Headers.ContentType.Parameters.First(o => o.Name == "boundary");
+            boundary.Value = boundary.Value.Replace("\"", String.Empty);
 
             #endregion
 
-            //if (response.StatusCode != System.Net.HttpStatusCode.OK)
-            //{
-            //    //handle according to established exception policy
-            //    throw (new UploadFileException(requestResponse));
-            //}
+            #region Finalize and deliver message
 
-            if (__receipt.EndsWith("\n"))
+            // Prepare request resource path / address --------
+            Uri ticketUrlUri = new Uri(ticketUrl);
+            
+            string baseAddress = $"{ticketUrlUri.Scheme}://{ticketUrlUri.Host}/";
+            
+            if (!ticketUrlUri.IsDefaultPort)
             {
-                __receipt = __receipt.Substring(0, __receipt.Length - 1);
+                baseAddress += $":{ticketUrlUri.Port}";
             }
 
-            return __receipt;
-        }
+            HttpClient client = new HttpClient(new HttpClientHandler()) { BaseAddress = new Uri(baseAddress) };
+       
+            HttpResponseMessage result = await client.PostAsync(ticketUrlUri.AbsolutePath, requestContent);
+            
+            if (result.StatusCode != HttpStatusCode.OK)
+            {
+                throw new UploadFileException(result);
+            }
+            
+            #endregion
 
+            string __receipt = await result.Content.ReadAsStringAsync();
+
+            return __receipt.Trim('\n'); ;
+        }
     }
 }
