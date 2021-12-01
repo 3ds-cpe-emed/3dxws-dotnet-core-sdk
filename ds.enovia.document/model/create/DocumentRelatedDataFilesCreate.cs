@@ -22,6 +22,6 @@ namespace ds.enovia.document.model
         {
             dataelements = new DocumentRelatedDataFilesDataElementsCreate();
         }
-        public DocumentRelatedDataFilesDataElementsCreate dataelements;
+        public DocumentRelatedDataFilesDataElementsCreate dataelements { get; set; }
     }
 }

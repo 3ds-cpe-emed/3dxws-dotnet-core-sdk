@@ -19,7 +19,7 @@ using System.Collections.Generic;
 
 namespace ds.enovia.document.model
 {
-    public class DocumentCreate : SerializableJsonObject
+    public class DocumentCreate
     {
         public DocumentCreate()
         {
