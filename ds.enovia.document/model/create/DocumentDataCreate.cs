@@ -26,17 +26,14 @@ namespace ds.enovia.document.model
         }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        //[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string id { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        //[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string type { get; set; }
         
         public DocumentDataElementsCreate dataelements { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        //[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public DocumentRelatedDataCreate relateddata { get; set; }
     }
 }

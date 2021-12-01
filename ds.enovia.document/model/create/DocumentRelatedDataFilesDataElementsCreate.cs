@@ -21,23 +21,18 @@ namespace ds.enovia.document.model
     public class DocumentRelatedDataFilesDataElementsCreate
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        //[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string title { get; set;}
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        //[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string format { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        //[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string receipt { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        //[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string comments { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        //[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string fileType { get; set; }
     }
 }

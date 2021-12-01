@@ -28,35 +28,27 @@ namespace ds.enovia.document.model
         //public string revision { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
-        //[JsonProperty(Required = Required.Always)]
         public string title { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        //[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string description { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        //[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string collabspace { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        //[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string comments { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        //[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string parentId { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        //[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string parentRelName { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        //[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string parentDirection { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        //[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<string> extensions { get; set; }
     }
 }
