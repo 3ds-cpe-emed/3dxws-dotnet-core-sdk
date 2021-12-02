@@ -56,8 +56,6 @@ namespace ds.authentication
             //Handle ticket login response
             TicketInfo loginTicketInfo = await HttpContentJsonExtensions.ReadFromJsonAsync<TicketInfo>(getLoginTicketResponse.Content);
 
-            //TicketInfo loginTicketInfo = await ((JsonContent)getLoginTicketResponse.Content).ReadFromJsonAsync<TicketInfo>();
-
             if (loginTicketInfo.response != LOGIN)
             {
                 //handle according to established exception policy
