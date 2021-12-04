@@ -121,6 +121,11 @@ namespace ds.enovia.dsxcad.service
         {
             string filename = _ticket.filename;
 
+            if (!_downloadLocation.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            {
+                _downloadLocation += Path.DirectorySeparatorChar;
+            }
+
             string downloadFile = string.Format("{0}{1}", _downloadLocation, filename);
 
             string downloadUrl = string.Format("{0}?{1}={2}", _ticket.ticketURL, _ticket.jobticket, HttpUtility.UrlEncode(_ticket.ticket));
@@ -132,11 +137,10 @@ namespace ds.enovia.dsxcad.service
             
             using (var writer = File.OpenWrite(downloadFile))
             {
-                    using (Stream streamToReadFrom = await res.Content.ReadAsStreamAsync())
-                    {
-                        streamToReadFrom.CopyTo(writer);
-                    }
-                //}
+                using (Stream streamToReadFrom = await res.Content.ReadAsStreamAsync())
+                {
+                    streamToReadFrom.CopyTo(writer);
+                }
             }
 
             return new FileInfo(downloadFile);
