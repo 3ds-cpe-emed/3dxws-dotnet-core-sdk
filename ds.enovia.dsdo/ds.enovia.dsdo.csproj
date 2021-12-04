@@ -15,7 +15,7 @@
     <PackageTags>3DEXPERIENCE</PackageTags>
     <PackageReleaseNotes>fix: package information</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</RepositoryUrl>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
