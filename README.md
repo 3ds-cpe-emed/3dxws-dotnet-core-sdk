@@ -1,13 +1,33 @@
 # 3DEXPERIENCE .Net Core SDK 
 Welcome to the Open Source Initiative for a .NET SDK for the 3DEXPERIENCE Web Services. This has been setup by the Dassault Systèmes CPE Emed team with the idea to empower our partners with the tools and techniques to rapidly master the usage of 3DEXPERIENCE Web Services. We are looking for Partners who which to contribute to the extension of this repository.
 
+
 ## Getting Started
  - The repository of samples that exercise many of the functionality wrapped by this SDK can be found [here](https://github.com/3ds-cpe-emed/3dxws-dotnet-samples).
  - The repository of samples focused on the Enterprise Integration Framework (EI) can be found [here](https://github.com/3ds-cpe-emed/3dxws.dotnet.event.samples)
  - A growing number of projects is being complemented with an equivalent tests folder that also shows how to exercise the classes in the SDK.
 
+## Projects
+
+Please note that this is working in progress and the coverage of all the available 3DEXPERIENCE resources is only partial.
+
+| 3DSpace Web Services | Project |
+| ------------ | ------- |
+| CAD Design Integration | ds.delmia.dsdxcad |
+| Collaboration Lifecycle | ds.enovia.dslc |
+| Collaboration Lifecycle | ds.enovia.dslc.changeaction |
+| Derived Outputs| ds.delmia.dsdo |
+| Document| ds.delmia.document |
+| Engineering | ds.enovia.dseng |
+| Enterprise Integration Framework | ds.enovia.eif |
+| IP Classification | ds.enovia.dslib |
+| IP Configuration | ds.enovia.dscfg |
+| Manufacturing Item | ds.delmia.dsmfg |
+| Manufacturing Process | ds.delmia.dsmfg |
+| Portfolio | ds.enovia.dsplf |
+
 ## Build
-- Visual Studio 2019 
+- Visual Studio 2019
 - Nuget compiled binaries
 
 ### Dependencies
