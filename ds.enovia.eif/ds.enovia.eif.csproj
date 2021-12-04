@@ -12,6 +12,8 @@
     <Version>1.0.2</Version>
     <PackageReleaseNotes>fix: package information</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
