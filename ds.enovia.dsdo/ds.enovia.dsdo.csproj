@@ -10,10 +10,12 @@
     <Company>Dassault Systèmes</Company>
     <Description>3DEXPERIENCE Dotnet Core SDK for Derived Output web services</Description>
     <Copyright>Copyright ©  2021</Copyright>
-    <PackageProjectUrl>https://github.com/nogueiraantonio/ds3dx-api-dotnet-core</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</PackageProjectUrl>
     <PackageLicenseFile>MITLicense.md</PackageLicenseFile>
     <PackageTags>3DEXPERIENCE</PackageTags>
-    <PackageReleaseNotes>Upgrade of the ds.enovia.dsdo 1.0.0 project to .NET standard 2.0</PackageReleaseNotes>
+    <PackageReleaseNotes>fix: package information</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</RepositoryUrl>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

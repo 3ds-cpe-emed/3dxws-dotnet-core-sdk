@@ -4,17 +4,19 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>2.0.0</Version>
+    <Version>2.0.1</Version>
     <Authors>Dassault Systèmes - EMED CPE</Authors>
     <Company>Dassault Systèmes</Company>
     <Description>3DEXPERIENCE Dotnet Core SDK for Portfolio web services</Description>
     <Copyright>Copyright ©  2021</Copyright>
-    <PackageLicenseUrl>https://mit-license.org/</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/nogueiraantonio/ds3dx-api-dotnet-core</PackageProjectUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</PackageProjectUrl>
     <PackageTags>3DEXPERIENCE</PackageTags>
-    <PackageReleaseNotes>Upgrade of the ds.enovia.dspfl 1.0.0 project to .NET standard 2.0</PackageReleaseNotes>
+    <PackageReleaseNotes>fix: package information</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ds.enovia.dspfl.snk</AssemblyOriginatorKeyFile>
+    <PackageLicenseFile>MITLicense.md</PackageLicenseFile>
+    <RepositoryUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +28,13 @@
     <ProjectReference Include="..\ds.authentication\ds.authentication.csproj" />
     <ProjectReference Include="..\ds.enovia.common\ds.enovia.common.csproj" />
     <ProjectReference Include="..\ds.enovia\ds.enovia.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\MITLicense.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
