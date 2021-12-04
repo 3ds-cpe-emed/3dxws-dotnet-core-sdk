@@ -10,7 +10,7 @@
     <Company>Dassault Systèmes</Company>
     <Copyright>Copyright ©  2021</Copyright>
     <Version>2.0.4</Version>
-    <PackageLicenseUrl>https://mit-license.org/</PackageLicenseUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</PackageProjectUrl>
     <PackageTags>3DEXPERIENCE</PackageTags>
     <PackageReleaseNotes>fix: package information</PackageReleaseNotes>
@@ -19,6 +19,7 @@
     <PackageId>ds.authentication</PackageId>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</RepositoryUrl>
+    <PackageLicenseFile>MITLicense.md</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,6 +29,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ds.enovia.common\ds.enovia.common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\MITLicense.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
