@@ -7,10 +7,13 @@
     <Description>3DEXPERIENCE Enterprise Integration Framework Dotnet wrapper classes</Description>
     <Copyright>Copyright ©  2021</Copyright>
     <PackageLicenseFile>MITLicense.md</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/nogueiraantonio/ds3dx-api-dotnet-core</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</PackageProjectUrl>
     <PackageTags>3DEXPERIENCE EIF</PackageTags>
-    <Version>1.0.1</Version>
-    <PackageReleaseNotes>fix: Deserialization of Message</PackageReleaseNotes>
+    <Version>1.0.2</Version>
+    <PackageReleaseNotes>fix: package information</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>

@@ -9,9 +9,10 @@
     <Description>3DEXPERIENCE Dotnet Core SDK for Enovia (shared base) web services</Description>
     <Copyright>Copyright ©  2021</Copyright>
     <PackageLicenseFile>MITLicense.md</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/nogueiraantonio/ds3dx-api-dotnet-core</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/nogueiraantonio/ds3dx-api-dotnet-core</RepositoryUrl>
-    <PackageReleaseNotes>baseline commit - get version graph</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</RepositoryUrl>
+    <PackageReleaseNotes>fix: package information</PackageReleaseNotes>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

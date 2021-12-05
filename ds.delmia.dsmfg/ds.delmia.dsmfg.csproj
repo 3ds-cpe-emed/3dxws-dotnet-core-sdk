@@ -4,18 +4,20 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>2.0.5</Version>
+    <Version>2.0.6</Version>
     <Authors>Dassault Systèmes - EMED CPE</Authors>
     <Company>Dassault Systèmes</Company>
     <Description>3DEXPERIENCE Dotnet Core SDK for Delmia Manufacturing Items, Processes and Resources web services</Description>
     <Copyright>Copyright ©  2021</Copyright>
-    <PackageLicenseUrl>https://mit-license.org/</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/nogueiraantonio/ds3dx-api-dotnet-core</PackageProjectUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</PackageProjectUrl>
     <PackageTags>3DEXPERIENCE</PackageTags>
-    <PackageReleaseNotes>fix: $searchStr Url encoded</PackageReleaseNotes>
+    <PackageReleaseNotes>fix: package information</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ds.delmia.dsfg.snk</AssemblyOriginatorKeyFile>
     <RootNamespace>ds.delmia</RootNamespace>
+    <PackageLicenseFile>MITLicense.md</PackageLicenseFile>
+    <RepositoryUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
@@ -27,6 +29,13 @@
     <ProjectReference Include="..\ds.enovia.common\ds.enovia.common.csproj" />
     <ProjectReference Include="..\ds.enovia.dscfg\ds.enovia.dscfg.csproj" />
     <ProjectReference Include="..\ds.enovia\ds.enovia.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\MITLicense.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
