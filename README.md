@@ -27,7 +27,7 @@ Please note that the projects in this repository are "work in progress" and the 
 |[ds.enovia.dslib](/ds.enovia.dslib/)|IP Classification (3DSpace) related wrapper classes and methods|[ds.enovia.dslib](https://www.nuget.org/packages/ds.enovia.dslib/)|
 |[ds.enovia.dscfg](/ds.enovia.dscfg/)|IP Configuration (3DSpace) related wrapper classes and methods|[ds.enovia.dscfg](https://www.nuget.org/packages/ds.enovia.dscfg/)|
 |[ds.delmia.dsmfg](/ds.delmia.dsmfg/)|Manufacturing Item and Manufacturing Process (3DSpace) related wrapper classes and methods|[ds.delmia.dsmfg](https://www.nuget.org/packages/ds.delmia.dsmfg/)|
-|[ds.delmia.dspfl](/ds.delmia.dspfl/)|Portfolio (3DSpace) related wrapper classes and methods|[ds.delmia.dsmfg](https://www.nuget.org/packages/ds.delmia.dsmfg/)|
+|[ds.enovia.dspfl](/ds.enovia.dspfl/)|Portfolio (3DSpace) related wrapper classes and methods|[ds.enovia.dspfl](https://www.nuget.org/packages/ds.enovia.dspfl/)|
 
 ## Build
 - Built and developed using Microsoft Visual Studio 2019 (16.11.7)
