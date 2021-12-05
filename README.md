@@ -11,23 +11,23 @@ Welcome to the Open Source Initiative for a .NET SDK for the 3DEXPERIENCE Web Se
 
 Please note that the projects in this repository are "work in progress" and the coverage of all the available 3DEXPERIENCE web services is only partial. In many cases very little coverage, well... at least for the moment.
 
-| Project | Description | Web Services Scope | Nuget |  
-| ------------ | ------- | ------------ | ------- | 
-|[ds.authentication](/ds.authentication/)|Authentication protocols; CAS, Openness Agent (Cloud), Batch Service (OnPremise)| Authentication (3DPassport)|[ds.authentication](https://www.nuget.org/packages/ds.authentication/)|
-|[ds.authentication.ui.win](/ds.authentication.ui.win/)|Helper User Interface dialogs for Authentication workflows| Authentication (3DPassport)|[ds.authentication.ui.win](https://www.nuget.org/packages/ds.authentication.ui.win/)|
-|[ds.enovia.common](/ds.enovia.common/)|Common classes and methods shared by other projects|-|[ds.enovia.common](https://www.nuget.org/packages/ds.enovia.common/)|
-|[ds.enovia](/ds.enovia/)|Common methods shared by project services|-|[ds.enovia](https://www.nuget.org/packages/ds.enovia/)|
-|[ds.enovia.dsxcad](/ds.enovia.dsxcad/)|CAD Design Integration wrapper classes and methods|CAD Design Integration (3DSpace)|[ds.enovia](https://www.nuget.org/packages/ds.enovia.dsxcad/)|
-|[ds.enovia.dslc](/ds.enovia.dslc/)|General Collaboration Lifecycle wrapper classes and methods except for Change Action|Collaboration Lifecycle (3DSpace)|[ds.enovia.dslc](https://www.nuget.org/packages/ds.enovia.dslc/)|
-|[ds.enovia.dslc.changeaction/](/ds.enovia.dslc.changeaction)|Change Action related wrapper classes and methods|Collaboration Lifecycle (3DSpace)|[ds.enovia.dslc.changeaction](https://www.nuget.org/packages/ds.enovia.dslc.changeaction/)|
-|[ds.enovia.dsdo](/ds.enovia.dsdo/)|Derived Outputs related wrapper classes and methods|Derived Outputs (3DSpace)|[ds.enovia.dsdo](https://www.nuget.org/packages/ds.enovia.dsdo/)|
-|[ds.enovia.document](/ds.enovia.document/)|Documents related wrapper classes and methods|Document (3DSpace)|[ds.enovia.document](https://www.nuget.org/packages/ds.enovia.document/)|
-|[ds.enovia.dseng](/ds.enovia.dseng/)|Engineering related wrapper classes and methods|Engineering (3DSpace)|[ds.enovia.dseng](https://www.nuget.org/packages/ds.enovia.dseng/)|
-|[ds.enovia.eif](/ds.enovia.eif/)|Enterprise Integration Framework (EIF) related wrapper classes and methods|Enterprise Integration Framework|[ds.enovia.eif](https://www.nuget.org/packages/ds.enovia.eif/)|
-|[ds.enovia.dslib](/ds.enovia.dslib/)|IP Classification related wrapper classes and methods|IP Classification (3DSpace)|[ds.enovia.dslib](https://www.nuget.org/packages/ds.enovia.dslib/)|
-|[ds.enovia.dscfg](/ds.enovia.dscfg/)|IP Configuration related wrapper classes and methods|IP Configuration (3DSpace)|[ds.enovia.dscfg](https://www.nuget.org/packages/ds.enovia.dscfg/)|
-|[ds.delmia.dsmfg](/ds.delmia.dsmfg/)|Manufacturing related wrapper classes and methods|Manufacturing Item and Manufacturing Process (3DSpace)|[ds.delmia.dsmfg](https://www.nuget.org/packages/ds.delmia.dsmfg/)|
-|[ds.delmia.dspfl](/ds.delmia.dspfl/)|Portfolio related wrapper classes and methods|Portfolio (3DSpace)|[ds.delmia.dsmfg](https://www.nuget.org/packages/ds.delmia.dsmfg/)|
+| Project | Description | Nuget |  
+| ------------ | -------------------- | ------- | 
+|[ds.authentication](/ds.authentication/)|Authentication (3DPassport); CAS, Openness Agent (Cloud), Batch Service (OnPremise)|[ds.authentication](https://www.nuget.org/packages/ds.authentication/)|
+|[ds.authentication.ui.win](/ds.authentication.ui.win/)|Authentication (3DPassport); Helper User Interface dialogs for Authentication workflows|[ds.authentication.ui.win](https://www.nuget.org/packages/ds.authentication.ui.win/)|
+|[ds.enovia.common](/ds.enovia.common/)|Common classes and methods shared by other projects|[ds.enovia.common](https://www.nuget.org/packages/ds.enovia.common/)|
+|[ds.enovia](/ds.enovia/)|Common methods shared by project services|[ds.enovia](https://www.nuget.org/packages/ds.enovia/)|
+|[ds.enovia.dsxcad](/ds.enovia.dsxcad/)|CAD Design Integration (3DSpace) wrapper classes and methods|[ds.enovia](https://www.nuget.org/packages/ds.enovia.dsxcad/)|
+|[ds.enovia.dslc](/ds.enovia.dslc/)|Collaboration Lifecycle (3DSpace) - General Collaboration Lifecycle wrapper classes and methods except for Change Action|[ds.enovia.dslc](https://www.nuget.org/packages/ds.enovia.dslc/)|
+|[ds.enovia.dslc.changeaction/](/ds.enovia.dslc.changeaction)|Collaboration Lifecycle (3DSpace) - Change Action related wrapper classes and methods|[ds.enovia.dslc.changeaction](https://www.nuget.org/packages/ds.enovia.dslc.changeaction/)|
+|[ds.enovia.dsdo](/ds.enovia.dsdo/)|Derived Outputs (3DSpace) related wrapper classes and methods|[ds.enovia.dsdo](https://www.nuget.org/packages/ds.enovia.dsdo/)|
+|[ds.enovia.document](/ds.enovia.document/)|Document (3DSpace) related wrapper classes and methods|[ds.enovia.document](https://www.nuget.org/packages/ds.enovia.document/)|
+|[ds.enovia.dseng](/ds.enovia.dseng/)|Engineering (3DSpace) related wrapper classes and methods|[ds.enovia.dseng](https://www.nuget.org/packages/ds.enovia.dseng/)|
+|[ds.enovia.eif](/ds.enovia.eif/)|Enterprise Integration Framework (EIF) related wrapper classes and methods|[ds.enovia.eif](https://www.nuget.org/packages/ds.enovia.eif/)|
+|[ds.enovia.dslib](/ds.enovia.dslib/)|IP Classification (3DSpace) related wrapper classes and methods|[ds.enovia.dslib](https://www.nuget.org/packages/ds.enovia.dslib/)|
+|[ds.enovia.dscfg](/ds.enovia.dscfg/)|IP Configuration (3DSpace) related wrapper classes and methods|[ds.enovia.dscfg](https://www.nuget.org/packages/ds.enovia.dscfg/)|
+|[ds.delmia.dsmfg](/ds.delmia.dsmfg/)|Manufacturing Item and Manufacturing Process (3DSpace) related wrapper classes and methods|[ds.delmia.dsmfg](https://www.nuget.org/packages/ds.delmia.dsmfg/)|
+|[ds.delmia.dspfl](/ds.delmia.dspfl/)|Portfolio (3DSpace) related wrapper classes and methods|[ds.delmia.dsmfg](https://www.nuget.org/packages/ds.delmia.dsmfg/)|
 
 ## Build
 - Built and developed using Microsoft Visual Studio 2019 (16.11.7)
