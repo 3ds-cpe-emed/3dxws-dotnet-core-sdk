@@ -15,7 +15,7 @@
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</PackageProjectUrl>
     <PackageTags>3DEXPERIENCE</PackageTags>
-    <PackageReleaseNotes>add: create engineering item</PackageReleaseNotes>
+    <PackageReleaseNotes>new: create engineering item</PackageReleaseNotes>
     <PackageLicenseFile>MITLicense.md</PackageLicenseFile>
     <RepositoryUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</RepositoryUrl>
   </PropertyGroup>
