@@ -6,7 +6,7 @@
     <AssemblyOriginatorKeyFile>ds.enovia.dseng.snk</AssemblyOriginatorKeyFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>2.0.9</Version>
+    <Version>2.0.10</Version>
     <Authors>Dassault Systèmes - EMED CPE</Authors>
     <Company>Dassault Systèmes</Company>
     <Description>3DEXPERIENCE Dotnet Core SDK for Engineering Items web services
@@ -15,7 +15,7 @@
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</PackageProjectUrl>
     <PackageTags>3DEXPERIENCE</PackageTags>
-    <PackageReleaseNotes>fix: package information</PackageReleaseNotes>
+    <PackageReleaseNotes>add: create Engineering Item</PackageReleaseNotes>
     <PackageLicenseFile>MITLicense.md</PackageLicenseFile>
     <RepositoryUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</RepositoryUrl>
   </PropertyGroup>

@@ -99,6 +99,43 @@ namespace ds.enovia.dseng.service
         }
         #endregion
 
+        #region Create Engineering Item
+        public async Task<NlsLabeledItemSet<EngineeringItem>> CreateEngineeringItem(EngineeringItemCreate _engItem)
+        {
+            CreateItemSet itemsCreate = new CreateItemSet();
+            List<object> items = new List<object>()
+            {
+                _engItem
+            };
+            itemsCreate.items = items;
+
+            return await CreateEngineeringItems(itemsCreate);
+        }
+
+        public async Task<NlsLabeledItemSet<EngineeringItem>> CreateEngineeringItems(CreateItemSet _engItemSet)
+        {
+            string createEngineeringItemEndpoint = string.Format("{0}", GetBaseResource());
+
+            EngineeringSearchMask engItemMask = EngineeringSearchMask.Default;
+
+            // masks
+            Dictionary<string, string> queryParams = new Dictionary<string, string>();
+            queryParams.Add("$mask", engItemMask.GetString());
+
+            string engItemSetPayload = JsonSerializer.Serialize(_engItemSet);
+            HttpResponseMessage requestResponse = await PostAsync(createEngineeringItemEndpoint, _body: engItemSetPayload);
+
+            if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                //handle according to established exception policy
+                throw (new EngineeringResponseException(requestResponse));
+            }
+
+            return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<EngineeringItem>>();
+        }
+
+        #endregion
+
         public async Task<EngineeringItem> GetEngineeringItemDetails(string _engineeringItemId)
         {
             Dictionary<string, string> queryParams = new Dictionary<string, string>();
