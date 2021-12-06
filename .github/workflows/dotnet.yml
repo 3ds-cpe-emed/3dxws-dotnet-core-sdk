@@ -2,9 +2,13 @@ name: .NET
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
+
+env:
+  PACKAGE_OUTPUT_DIR: ${{ github.workspace }}\output
+  NUGET_SOURCE_URL: 'https://api.nuget.org/v3/index.json'
 
 jobs:
   build:
@@ -20,6 +24,101 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore --configuration Release
     - name: Test
       run: dotnet test --no-build --verbosity normal
+      
+    - id: file_changes
+      uses: trilom/file-changes-action@v1.2.4
+    - name: Check Modified Files
+      run: echo ${{ steps.file_changes.outputs.files_modified}}
+      
+    - name: Pack and deploy Authentication Library to Nuget
+      run: |
+        dotnet pack ds.authentication/ds.authentication.csproj --no-restore --no-build --configuration Release --include-symbols --output ${{ env.PACKAGE_OUTPUT_DIR}}
+        dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIR }}\ds.authentication.*.nupkg -k {{ secrets.NUGET_AUTH_TOKEN }} -s ${{ env.NUGET_SOURCE_URL }}
+      if: contains(steps.file_changes.outputs.files_modified, 'ds.authentication/ds.authentication.csproj' )
+      
+    - name: Pack and deploy Authentication UI Library to Nuget
+      run: |
+        dotnet pack ds.authentication.ui.win/ds.authentication.ui.win.csproj --no-restore --no-build --configuration Release --include-symbols --output ${{ env.PACKAGE_OUTPUT_DIR}}
+        dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIR }}\ds.authentication.ui.win.*.nupkg -k {{ secrets.NUGET_AUTH_TOKEN }} -s ${{ env.NUGET_SOURCE_URL }}
+      if: contains(steps.file_changes.outputs.files_modified, 'ds.authentication.ui.win/ds.authentication.ui.win.csproj' )
+    
+    - name: Pack and deploy DS Delmia MFG Library to Nuget
+      run: |
+        dotnet pack ds.delmia.mfg/ds.delmia.mfg.csproj --no-restore --no-build --configuration Release --include-symbols --output ${{ env.PACKAGE_OUTPUT_DIR}}
+        dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIR }}\ds.delmia.mfg.*.nupkg -k {{ secrets.NUGET_AUTH_TOKEN }} -s ${{ env.NUGET_SOURCE_URL }}
+      if: contains(steps.file_changes.outputs.files_modified, 'ds.delmia.mfg/ds.delmia.mfg.csproj' ) 
+
+    - name: Pack and deploy DS Enovia Common Library to Nuget
+      run: |
+        dotnet pack ds.enovia.common/ds.enovia.common.csproj --no-restore --no-build --configuration Release --include-symbols --output ${{ env.PACKAGE_OUTPUT_DIR}}
+        dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIR }}\ds.enovia.common.*.nupkg -k {{ secrets.NUGET_AUTH_TOKEN }} -s ${{ env.NUGET_SOURCE_URL }}
+      if: contains(steps.file_changes.outputs.files_modified, 'ds.enovia.common/ds.enovia.common.csproj' )
+      
+    - name: Pack and deploy DS Enovia library to Nuget
+      run: |
+        dotnet pack ds.enovia/ds.enovia.csproj --no-restore --no-build --configuration Release --include-symbols --output ${{ env.PACKAGE_OUTPUT_DIR}}
+        dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIR }}\ds.enovia.*.nupkg -k {{ secrets.NUGET_AUTH_TOKEN }} -s ${{ env.NUGET_SOURCE_URL }}
+      if: contains(steps.file_changes.outputs.files_modified, 'ds.enovia/ds.enovia.csproj' )
+      
+    - name: Pack and deploy Document library to Nuget
+      run: |
+        dotnet pack ds.enovia.document/ds.enovia.document.csproj --no-restore --no-build --configuration Release --include-symbols --output ${{ env.PACKAGE_OUTPUT_DIR}}
+        dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIR }}\ds.enovia.document.*.nupkg -k {{ secrets.NUGET_AUTH_TOKEN }} -s ${{ env.NUGET_SOURCE_URL }}
+      if: contains(steps.file_changes.outputs.files_modified, 'ds.enovia.document/ds.enovia.document.csproj' )
+      
+    - name: Pack and deploy IP Configuration library to Nuget
+      run: |
+        dotnet pack ds.enovia.dscfg/ds.enovia.dscfg.csproj --no-restore --no-build --configuration Release --include-symbols --output ${{ env.PACKAGE_OUTPUT_DIR}}
+        dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIR }}\ds.enovia.dscfg.*.nupkg -k {{ secrets.NUGET_AUTH_TOKEN }} -s ${{ env.NUGET_SOURCE_URL }}
+      if: contains(steps.file_changes.outputs.files_modified, 'ds.enovia.dscfg/ds.enovia.dscfg.csproj' )
+      
+    - name: Pack and deploy Derived Output library to Nuget
+      run: |
+        dotnet pack ds.enovia.dsdo/ds.enovia.dsdo.csproj --no-restore --no-build --configuration Release --include-symbols --output ${{ env.PACKAGE_OUTPUT_DIR}}
+        dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIR }}\ds.enovia.dsdo.*.nupkg -k {{ secrets.NUGET_AUTH_TOKEN }} -s ${{ env.NUGET_SOURCE_URL }}
+      if: contains(steps.file_changes.outputs.files_modified, 'ds.enovia.dsdo/ds.enovia.dsdo.csproj' )
+      
+    - name: Pack and deploy Engineering library to Nuget
+      run: |
+        dotnet pack ds.enovia.dseng/ds.enovia.dseng.csproj --no-restore --no-build --configuration Release --include-symbols --output ${{ env.PACKAGE_OUTPUT_DIR}}
+        dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIR }}\ds.enovia.dseng.*.nupkg -k {{ secrets.NUGET_AUTH_TOKEN }} -s ${{ env.NUGET_SOURCE_URL }}
+      if: contains(steps.file_changes.outputs.files_modified, 'ds.enovia.dseng/ds.enovia.dseng.csproj' )  
+      
+    - name: Pack and deploy Collaborative Lifecycle (Change Action) library to Nuget
+      run: |
+        dotnet pack ds.enovia.dslc.changeaction/ds.enovia.dslc.changeaction.csproj --no-restore --no-build --configuration Release --include-symbols --output ${{ env.PACKAGE_OUTPUT_DIR}}
+        dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIR }}\ds.enovia.dslc.changeaction.*.nupkg -k {{ secrets.NUGET_AUTH_TOKEN }} -s ${{ env.NUGET_SOURCE_URL }}
+      if: contains(steps.file_changes.outputs.files_modified, 'ds.enovia.dslc.changeaction/ds.enovia.dslc.changeaction.csproj' )
+      
+    - name: Pack and deploy Collaborative Lifecycle library to Nuget
+      run: |
+        dotnet pack ds.enovia.dslc/ds.enovia.dslc.csproj --no-restore --no-build --configuration Release --include-symbols --output ${{ env.PACKAGE_OUTPUT_DIR}}
+        dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIR }}\ds.enovia.dslc.*.nupkg -k {{ secrets.NUGET_AUTH_TOKEN }} -s ${{ env.NUGET_SOURCE_URL }}
+      if: contains(steps.file_changes.outputs.files_modified, 'ds.enovia.dslc/ds.enovia.dslc.csproj' )
+      
+    - name: Pack and deploy IP Classification library to Nuget
+      run: |
+        dotnet pack ds.enovia.dslib/ds.enovia.dslib.csproj --no-restore --no-build --configuration Release --include-symbols --output ${{ env.PACKAGE_OUTPUT_DIR}}
+        dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIR }}\ds.enovia.dslib.*.nupkg -k {{ secrets.NUGET_AUTH_TOKEN }} -s ${{ env.NUGET_SOURCE_URL }}
+      if: contains(steps.file_changes.outputs.files_modified, 'ds.enovia.dslib/ds.enovia.dslib.csproj' )
+      
+    - name: Pack and deploy Portfolio library to Nuget
+      run: |
+        dotnet pack ds.enovia.dspfl/ds.enovia.dspfl.csproj --no-restore --no-build --configuration Release --include-symbols --output ${{ env.PACKAGE_OUTPUT_DIR}}
+        dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIR }}\ds.enovia.dspfl.*.nupkg -k {{ secrets.NUGET_AUTH_TOKEN }} -s ${{ env.NUGET_SOURCE_URL }}
+      if: contains(steps.file_changes.outputs.files_modified, 'ds.enovia.dspfl/ds.enovia.dspfl.csproj' )
+      
+    - name: Pack and deploy CAD Design Integration library to Nuget
+      run: |
+        dotnet pack ds.enovia.dsxcad/ds.enovia.dsxcad.csproj --no-restore --no-build --configuration Release --include-symbols --output ${{ env.PACKAGE_OUTPUT_DIR}}
+        dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIR }}\ds.enovia.dsxcad.*.nupkg -k {{ secrets.NUGET_AUTH_TOKEN }} -s ${{ env.NUGET_SOURCE_URL }}
+      if: contains(steps.file_changes.outputs.files_modified, 'ds.enovia.dsxcad/ds.enovia.dsxcad.csproj' )
+      
+    - name: Pack and deploy Enterprise Integration Framework library to Nuget
+      run: |
+        dotnet pack ds.enovia.eif/ds.enovia.eif.csproj --no-restore --no-build --configuration Release --include-symbols --output ${{ env.PACKAGE_OUTPUT_DIR}}
+        dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIR }}\ds.enovia.eif.*.nupkg -k {{ secrets.NUGET_AUTH_TOKEN }} -s ${{ env.NUGET_SOURCE_URL }}
+      if: contains(steps.file_changes.outputs.files_modified, 'ds.enovia.eif/ds.enovia.eif.csproj' )
