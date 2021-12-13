@@ -136,6 +136,11 @@ namespace ds.enovia.dseng.service
 
         #endregion
 
+        public async Task<EngineeringItem> GetEngineeringItemDetails(EngineeringItem _item)
+        {
+            return await GetEngineeringItemDetails(_item.id);
+        }
+
         public async Task<EngineeringItem> GetEngineeringItemDetails(string _engineeringItemId)
         {
             Dictionary<string, string> queryParams = new Dictionary<string, string>();
