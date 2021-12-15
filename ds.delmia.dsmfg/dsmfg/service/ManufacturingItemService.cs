@@ -99,7 +99,7 @@ namespace ds.delmia.dsmfg.service
             return await SearchAsync(_searchQuery, _skip, _top);
         }
 
-        public async Task<NlsLabeledItemSet<ManufacturingItemDetails>> SearchWithDetails(SearchQuery _searchQuery, long _skip = 0, long _top = 100)
+        public async Task<NlsLabeledItemSet<ManufacturingItem>> SearchWithDetails(SearchQuery _searchQuery, long _skip = 0, long _top = 100)
         {
             string searchManufacturingItems = string.Format("{0}{1}{2}", GetBaseResource(), MANUFACTURING_ITEM, SEARCH);
 
@@ -123,32 +123,30 @@ namespace ds.delmia.dsmfg.service
             var deserializeOptions = new JsonSerializerOptions();
             deserializeOptions.Converters.Add(new ManufacturingItemDetailsConverter());
 
-            return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<ManufacturingItemDetails>>(deserializeOptions);
+            return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<ManufacturingItem>>(deserializeOptions);
         }
         #endregion
 
-        public async Task<NlsLabeledItemSet<ManufacturingItem>> CreateManufacturingItem(ManufacturingItemCreate _mfgItem)
+        public async Task<NlsLabeledItemSet<ManufacturingItem>> CreateManufacturingItem(ManufacturingItemCreate _mfgItem, ManufacturingItemMask _mask = ManufacturingItemMask.Default)
         {
             ManufacturingModelSetCreate itemsCreate = new ManufacturingModelSetCreate();
             itemsCreate.items.Add(_mfgItem);
 
-            return await CreateManufacturingItem(itemsCreate);
+            return await CreateManufacturingItem(itemsCreate, _mask);
         }
 
-        public async Task<NlsLabeledItemSet<ManufacturingItem>> CreateManufacturingItem(ManufacturingModelSetCreate _mfgItemSet)
+        public async Task<NlsLabeledItemSet<ManufacturingItem>> CreateManufacturingItem(ManufacturingModelSetCreate _mfgItemSet, ManufacturingItemMask _mask = ManufacturingItemMask.Default)
         {
-            //.................
+            //.............
 
             string createManufacturingItemEndpoint = string.Format("{0}{1}", GetBaseResource(), MANUFACTURING_ITEM);
 
-            ManufacturingItemMask mfgItemMask = ManufacturingItemMask.Default;
-
             // masks
             Dictionary<string, string> queryParams = new Dictionary<string, string>();
-            queryParams.Add("$mask", mfgItemMask.GetString());
+            queryParams.Add("$mask", _mask.GetString());
 
             string mfgItemSetPayload = JsonSerializer.Serialize(_mfgItemSet);
-            HttpResponseMessage requestResponse = await PostAsync(createManufacturingItemEndpoint, null, null, mfgItemSetPayload);
+            HttpResponseMessage requestResponse = await PostAsync(createManufacturingItemEndpoint, _body: mfgItemSetPayload, _queryParameters: queryParams);
 
             if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
             {
@@ -211,17 +209,23 @@ namespace ds.delmia.dsmfg.service
             return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<ManufacturingItem>>(deserializeOptions);
         }
 
-        public async Task<NlsLabeledItemSet<ManufacturingItemDetails>> GetManufacturingItemFieldsDetails(string _mfgItemId, ManufacturingItemFields _fields)
+        public async Task<NlsLabeledItemSet<ManufacturingItem>> GetManufacturingItemFieldsDetails(string _mfgItemId, ManufacturingItemFields _fields = null, ManufacturingItemMask _mask = ManufacturingItemMask.Details)
         {
             string getManufacturingItem = string.Format("{0}{1}/{2}", GetBaseResource(), MANUFACTURING_ITEM, _mfgItemId);
 
-            ManufacturingItemMask mfgItemMask = ManufacturingItemMask.Details;
+            //ManufacturingItemMask mfgItemMask = ManufacturingItemMask.Details;
 
             // masks
             Dictionary<string, string> queryParams = new Dictionary<string, string>();
-            queryParams.Add("$mask", mfgItemMask.GetString());
-            queryParams.Add("$fields", _fields.ToString());
-            
+            queryParams.Add("$mask", _mask.GetString());
+
+            string fields = "*";
+
+            if (_fields != null)
+                fields = _fields.ToString();
+
+            //queryParams.Add("$fields", fields);
+
             HttpResponseMessage requestResponse = await GetAsync(getManufacturingItem, queryParams);
 
             if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
@@ -233,7 +237,7 @@ namespace ds.delmia.dsmfg.service
             var deserializeOptions = new JsonSerializerOptions();
             deserializeOptions.Converters.Add(new ManufacturingItemDetailsConverter());
 
-            return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<ManufacturingItemDetails>>(deserializeOptions);
+            return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<ManufacturingItem>>(deserializeOptions);
 
         }
         #endregion

@@ -14,17 +14,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //------------------------------------------------------------------------------------------------------------------------------------
 
-namespace ds.delmia.dsmfg.model
-{
-    public class ManufacturingItemDetails : ManufacturingItem
-    {
-        public string outsourced { get; set; }
+//namespace ds.delmia.dsmfg.model
+//{
+//    public class ManufacturingItemDetails : ManufacturingItem
+//    {
+//        public string outsourced { get; set; }
 
-        public string planningRequired { get; set; }
+//        public string planningRequired { get; set; }
 
-        public string isLotNumberRequired { get; set; }
+//        public string isLotNumberRequired { get; set; }
 
-        public string isSerialNumberRequired { get; set; }
+//        public string isSerialNumberRequired { get; set; }
 
-    }
-}
+//    }
+//}

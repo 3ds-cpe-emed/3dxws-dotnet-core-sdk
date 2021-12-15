@@ -16,16 +16,68 @@
 
 using ds.enovia.common.model;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace ds.delmia.dsmfg.model
 {
     public class ManufacturingItem : Item
     {
+       
         public ManufacturingItem()
         {
+            m_dictionary = new Dictionary<string, object>();
             interfaces = new Dictionary<string, object>();
         }
 
+        private Dictionary<string, object> m_dictionary;
         public Dictionary<string, object> interfaces;
+
+        [JsonPropertyName(MFGResourceNames.DSMFG_OUTSOURCED)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string outsourced
+        {
+            get { return m_dictionary.ContainsKey(MFGResourceNames.DSMFG_OUTSOURCED) ? (string)m_dictionary[MFGResourceNames.DSMFG_OUTSOURCED] : null; }
+            set
+            {
+                //Note that if key doesn't exist gets created
+                m_dictionary[MFGResourceNames.DSMFG_OUTSOURCED] = value;
+            }
+        }
+
+        [JsonPropertyName(MFGResourceNames.DSMFG_PLANNING_REQUIRED)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string planningRequired
+        {
+            get { return m_dictionary.ContainsKey(MFGResourceNames.DSMFG_PLANNING_REQUIRED) ? (string)m_dictionary[MFGResourceNames.DSMFG_PLANNING_REQUIRED] : null; }
+            set
+            {
+                //Note that if key doesn't exist gets created
+                m_dictionary[MFGResourceNames.DSMFG_PLANNING_REQUIRED] = value;
+            }
+        }
+
+        [JsonPropertyName(MFGResourceNames.DSMFG_IS_LOT_NUMBER_REQUIRED)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public bool? isLotNumberRequired
+        {
+            get { return m_dictionary.ContainsKey(MFGResourceNames.DSMFG_IS_LOT_NUMBER_REQUIRED) ? (bool?)m_dictionary[MFGResourceNames.DSMFG_IS_LOT_NUMBER_REQUIRED] : null; }
+            set
+            {
+                //Note that if key doesn't exist gets created
+                m_dictionary[MFGResourceNames.DSMFG_IS_LOT_NUMBER_REQUIRED] = value;
+            }
+        }
+
+        [JsonPropertyName(MFGResourceNames.DSMFG_IS_SERIAL_NUMBER_REQUIRED)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public bool? isSerialNumberRequired
+        {
+            get { return m_dictionary.ContainsKey(MFGResourceNames.DSMFG_IS_SERIAL_NUMBER_REQUIRED) ? (bool?)m_dictionary[MFGResourceNames.DSMFG_IS_SERIAL_NUMBER_REQUIRED] : null; }
+            set
+            {
+                //Note that if key doesn't exist gets created
+                m_dictionary[MFGResourceNames.DSMFG_IS_SERIAL_NUMBER_REQUIRED] = value;
+            }
+        }
     }
 }
