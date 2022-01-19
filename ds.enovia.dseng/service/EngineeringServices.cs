@@ -18,6 +18,7 @@ using ds.authentication;
 using ds.enovia.common.collection;
 using ds.enovia.common.search;
 using ds.enovia.dseng.exception;
+using ds.enovia.dseng.fields;
 using ds.enovia.dseng.mask;
 using ds.enovia.dseng.model;
 using ds.enovia.dseng.model.configured;
@@ -26,10 +27,10 @@ using ds.enovia.dseng.search;
 using ds.enovia.service;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Net.Http.Json;
-using System.Web;
 using System.Text.Json;
+using System.Threading.Tasks;
+using System.Web;
 
 namespace ds.enovia.dseng.service
 {
@@ -136,15 +137,19 @@ namespace ds.enovia.dseng.service
 
         #endregion
 
-        public async Task<EngineeringItem> GetEngineeringItemDetails(EngineeringItem _item)
+        public async Task<EngineeringItem> GetEngineeringItemDetails(EngineeringItem _item, EngineeringItemFields _engItemFields = null)
         {
-            return await GetEngineeringItemDetails(_item.id);
+            return await GetEngineeringItemDetails(_item.id, _engItemFields);
         }
 
-        public async Task<EngineeringItem> GetEngineeringItemDetails(string _engineeringItemId)
+        public async Task<EngineeringItem> GetEngineeringItemDetails(string _engineeringItemId, EngineeringItemFields _engItemFields = null)
         {
             Dictionary<string, string> queryParams = new Dictionary<string, string>();
             queryParams.Add("$mask", "dsmveng:EngItemMask.Details");
+            if (_engItemFields != null)
+            {
+                queryParams.Add("$fields", _engItemFields.ToString());
+            }
 
             string searchResource = string.Format("{0}/{1}", GetBaseResource(), _engineeringItemId);
 
