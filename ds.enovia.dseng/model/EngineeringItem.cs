@@ -22,12 +22,12 @@ namespace ds.enovia.dseng.model
 {
     public class EngineeringItem : Item
     {
-       
         [JsonPropertyName("dseng:EnterpriseReference")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public EnterpriseReferenceCreate enterpriseReference { get; set; }
 
         [JsonPropertyName("dseno:EnterpriseAttributes")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Dictionary<string, object> enterpriseAttributes { get; set; }
-      
     }
 }

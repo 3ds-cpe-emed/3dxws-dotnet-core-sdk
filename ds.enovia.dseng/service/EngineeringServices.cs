@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 using System.Net.Http.Json;
 using System.Web;
 using System.Text.Json;
+using ds.enovia.common.interfaces;
 
 namespace ds.enovia.dseng.service
 {
@@ -448,5 +449,44 @@ namespace ds.enovia.dseng.service
         }
 
         #endregion
+
+        ////
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="_id"></param>
+        /// <param name="_mask"></param>
+        /// <param name="_filter"></param>
+        /// <returns></returns>
+
+        public async Task<EngineeringItem> GetEngineeringItemMask(string _id, IMask _mask = null, IFilter _filter = null)
+        {
+            Dictionary<string, string> queryParams = new Dictionary<string, string>();
+         
+            if (_mask!=null)     queryParams.Add("$mask",   _mask.Mask);
+            if (_filter != null) queryParams.Add("$filter", _filter.Filter);
+
+            string searchResource = string.Format("{0}/{1}", GetBaseResource(), _id);
+
+            HttpResponseMessage requestResponse = await GetAsync(searchResource, queryParams);
+
+            if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                //handle according to established exception policy
+                throw (new EngineeringResponseException(requestResponse));
+            }
+
+            NlsLabeledItemSet<EngineeringItem> engItemSet =
+                     await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<EngineeringItem>>();
+
+            if ((engItemSet != null) && (engItemSet.totalItems == 1))
+            {
+                return engItemSet.member[0];
+            }
+
+            return null;
+        }
+
+        ///
     }
 }

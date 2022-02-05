@@ -14,11 +14,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //------------------------------------------------------------------------------------------------------------------------------------
 
+using ds.enovia.common.model;
 using System.Collections.Generic;
 
 namespace ds.enovia.common.collection
 {
     public class ItemSet<T> : SerializableJsonObject
+    {
+        public long totalItems { get; set; }
+        public List<T> member { get; set; }
+    }
+
+    public class ItemSet2<T> : ResponseSchema
     {
         public long totalItems { get; set; }
         public List<T> member { get; set; }

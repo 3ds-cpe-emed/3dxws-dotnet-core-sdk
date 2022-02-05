@@ -13,26 +13,31 @@
 // BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //------------------------------------------------------------------------------------------------------------------------------------
-
-using ds.authentication;
-using ds.delmia.dsmfg.converter;
-using ds.delmia.dsmfg.exception;
-using ds.delmia.dsmfg.fields;
-using ds.delmia.dsmfg.mask;
-using ds.delmia.dsmfg.model;
-using ds.delmia.dsmfg.model.process;
-using ds.delmia.model;
-using ds.enovia.common.collection;
-using ds.enovia.common.model;
-using ds.enovia.common.search;
-using ds.enovia.service;
-
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
+
+using ds.authentication;
+
+using ds.enovia.service;
+
+using ds.enovia.common.collection;
+using ds.enovia.common.model;
+using ds.enovia.common.search;
+using ds.enovia.common.serialization;
+
+using ds.delmia.dsmfg.exception;
+using ds.delmia.dsmfg.model;
+using ds.delmia.dsmfg.schema;
+using ds.enovia.common.interfaces.attributes;
+using System.Text.Json.Serialization;
+using ds.delmia.model.collections;
+using ds.delmia.dsmfg.model.reference;
+using ds.delmia.dsmfg.interfaces;
 
 namespace ds.delmia.dsmfg.service
 {
@@ -64,20 +69,18 @@ namespace ds.delmia.dsmfg.service
         //<summary>Notes from public documentation
         // Engineering Web Services 1.3.0 - Gets a list of Engineering Items. By default, returns a total of up to 50 items, can be optionally increased upto 1000 items using $top query parameter.
         // Recommendation: Use $searchStr query parameter with a minimum of two characters for better performances.</summary>
-        public async Task<List<NlsLabeledItemSet<ManufacturingItem>>> SearchAll(SearchQuery _searchString)
+        public async Task<List<NlsLabeledItemSet2<ManufacturingItem>>> SearchAll(SearchQuery _searchString)
         {
             return await SearchUtils<ManufacturingItem>.SearchAllAsync(this, _searchString);
         }
 
-        public async Task<NlsLabeledItemSet<ManufacturingItem>> SearchAsync(SearchQuery _searchQuery, long _skip, long _top, string _mask = null)
+        public async Task<NlsLabeledItemSet2<ManufacturingItem>> SearchAsync(SearchQuery _searchQuery, long _skip, long _top, string _mask = null)
         {
             string searchManufacturingItems = string.Format("{0}{1}{2}", GetBaseResource(), MANUFACTURING_ITEM, SEARCH);
 
-            ManufacturingItemMask mfgItemMask = ManufacturingItemMask.Default;
-
             // masks
             Dictionary<string, string> queryParams = new Dictionary<string, string>();
-            queryParams.Add("$mask", mfgItemMask.GetString());
+            queryParams.Add("$mask", MFGResourceNames.DSMFG_MFGITEM_MASK_DEFAULT);
             queryParams.Add("$skip", _skip.ToString());
             queryParams.Add("$top", _top.ToString());
             queryParams.Add("$searchStr", HttpUtility.UrlEncode(_searchQuery.GetSearchString()));
@@ -90,155 +93,167 @@ namespace ds.delmia.dsmfg.service
                 throw (new ManufacturingResponseException(requestResponse));
             }
 
-            return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<ManufacturingItem>>();
+            //TODO: Review this to use ManufacturingItemRead
+            return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet2<ManufacturingItem>>();
         }
 
         //Gets a indexed search result of Manufacturing Item
-        public async Task<NlsLabeledItemSet<ManufacturingItem>> Search(SearchQuery _searchQuery, long _skip = 0, long _top = 100)
+        public async Task<NlsLabeledItemSet2<ManufacturingItem>> Search(SearchQuery _searchQuery, long _skip = 0, long _top = 100)
         {
             return await SearchAsync(_searchQuery, _skip, _top);
         }
+        #endregion
 
-        public async Task<NlsLabeledItemSet<ManufacturingItem>> SearchWithDetails(SearchQuery _searchQuery, long _skip = 0, long _top = 100)
+        public async Task<IManufacturingItem> CreateManufacturingItem(IManufacturingItemBaseCreate _mfgItem, string _maskName = MFGResourceNames.DSMFG_MFGITEM_MASK_DEFAULT)
         {
-            string searchManufacturingItems = string.Format("{0}{1}{2}", GetBaseResource(), MANUFACTURING_ITEM, SEARCH);
+            // input validation
+            if (_mfgItem == null) throw new ArgumentNullException();
 
-            ManufacturingItemMask mfgItemMask = ManufacturingItemMask.Details;
+            // Prepare Request ---
+
+            string requestUri = string.Format("{0}{1}", GetBaseResource(), MANUFACTURING_ITEM);
 
             // masks
             Dictionary<string, string> queryParams = new Dictionary<string, string>();
-            queryParams.Add("$mask", mfgItemMask.GetString());
-            queryParams.Add("$skip", _skip.ToString());
-            queryParams.Add("$top", _top.ToString());
-            queryParams.Add("$searchStr", _searchQuery.GetSearchString());
+            queryParams.Add("$mask", _maskName);
 
-            HttpResponseMessage requestResponse = await GetAsync(searchManufacturingItems, queryParams);
+            string mfgItemSetPayload = SerializeManufacturingItemSetRequest(_mfgItem);
 
-            if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
+            // Send request
+            HttpResponseMessage response = await PostAsync(requestUri, _body: mfgItemSetPayload, _queryParameters: queryParams);
+
+            // Handle response
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
                 //handle according to established exception policy
-                throw (new ManufacturingResponseException(requestResponse));
+                throw (new ManufacturingResponseException(response));
             }
 
-            var deserializeOptions = new JsonSerializerOptions();
-            deserializeOptions.Converters.Add(new ManufacturingItemDetailsConverter());
+            // Deserialize response
+            NlsLabeledItemSet2<ManufacturingItem> returnSet = await DeserializeResponse<NlsLabeledItemSet2<ManufacturingItem>>(response, _maskName);
 
-            return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<ManufacturingItem>>(deserializeOptions);
+            if ((null == returnSet) || (returnSet.member.Count != 1))
+            {
+                throw (new ManufacturingResponseException(response));
+            }
+
+            return returnSet.member[0];
+        }
+
+        public string SerializeManufacturingItemSetRequest(object _inputData)
+        {
+            ManufacturingItemSetCreate itemsCreate = new ManufacturingItemSetCreate();
+            itemsCreate.items.Add(_inputData);
+
+            Type inputDataType = _inputData.GetType();
+
+            if (inputDataType.IsSubclassOf(typeof(JsonSerializable)))
+            {
+                JsonSerializerOptions serializationOptions = GetSerializationOptions(inputDataType);
+                return JsonSerializer.Serialize(itemsCreate, serializationOptions);
+            }
+
+
+            return JsonSerializer.Serialize(itemsCreate);
+        }
+
+        private JsonSerializerOptions GetSerializationOptions(Type t)
+            {
+            JsonConverter jconverter = GetJsonSerializableConverter(t);
+            JsonSerializerOptions __options = new JsonSerializerOptions();
+            __options.Converters.Add(jconverter);
+            return __options;
+        }
+
+        private JsonConverter GetJsonSerializableConverter(Type t)
+        {
+            Type[] typeParams = new Type[] { t };
+            Type constructedType = typeof(JsonSerializableConverter<>).MakeGenericType(typeParams);
+            return (JsonConverter)(Activator.CreateInstance(constructedType));
+        }
+
+        public async Task<NlsLabeledItemSet2<ManufacturingItem>> GetManufacturingItem(string _mfgItemId, string _maskName = MFGResourceNames.DSMFG_MFGITEM_MASK_DEFAULT)
+        {
+            // Prepare Request
+            string requestUri = string.Format("{0}{1}/{2}", GetBaseResource(), MANUFACTURING_ITEM, _mfgItemId);
+
+            // mask
+            Dictionary<string, string> queryParams = new Dictionary<string, string>();
+            queryParams.Add("$mask", _maskName);
+
+            // Send Request
+            HttpResponseMessage response = await GetAsync(requestUri, queryParams);
+
+            // Handle Response
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                //handle according to established exception policy
+                throw (new ManufacturingResponseException(response));
+            }
+
+            return await DeserializeResponse<NlsLabeledItemSet2<ManufacturingItem>>(response, _maskName);
         }
         #endregion
 
-        public async Task<NlsLabeledItemSet<ManufacturingItem>> CreateManufacturingItem(ManufacturingItemCreate _mfgItem, ManufacturingItemMask _mask = ManufacturingItemMask.Default)
-        {
-            ManufacturingModelSetCreate itemsCreate = new ManufacturingModelSetCreate();
-            itemsCreate.items.Add(_mfgItem);
+        #region in development
 
-            return await CreateManufacturingItem(itemsCreate, _mask);
+        public async Task<NlsLabeledItemSet2<ManufacturingItem>> GetManufacturingItem2(IUniqueIdentifier _mfgItemId, string _maskName = MFGResourceNames.DSMFG_MFGITEM_MASK_DEFAULT, IList<string> _includeFieldsNames = null)
+        {
+            return await GetManufacturingItem2(_mfgItemId.Id, _maskName, _includeFieldsNames);
         }
 
-        public async Task<NlsLabeledItemSet<ManufacturingItem>> CreateManufacturingItem(ManufacturingModelSetCreate _mfgItemSet, ManufacturingItemMask _mask = ManufacturingItemMask.Default)
+        public async Task<NlsLabeledItemSet2<ManufacturingItem>> GetManufacturingItem2(string _mfgItemId, string _maskName = MFGResourceNames.DSMFG_MFGITEM_MASK_DEFAULT, IList<string> _includeFieldsNames = null)
         {
-            //.............
+            if (_mfgItemId == null) throw new ArgumentNullException("_mfgItemId is required");
 
-            string createManufacturingItemEndpoint = string.Format("{0}{1}", GetBaseResource(), MANUFACTURING_ITEM);
+            //Build the Request
 
-            // masks
+            string requestUri = string.Format("{0}{1}/{2}", GetBaseResource(), MANUFACTURING_ITEM, _mfgItemId);
+
+            //mask
             Dictionary<string, string> queryParams = new Dictionary<string, string>();
-            queryParams.Add("$mask", _mask.GetString());
+            if (_maskName != null)
+                queryParams.Add("$mask", _maskName);
 
-            string mfgItemSetPayload = JsonSerializer.Serialize(_mfgItemSet);
-            HttpResponseMessage requestResponse = await PostAsync(createManufacturingItemEndpoint, _body: mfgItemSetPayload, _queryParameters: queryParams);
+            //fields
+            string schemaFieldsQuery = SchemaUtils.GetFieldsQueryString(_includeFieldsNames);
+            if (schemaFieldsQuery != null)
+                queryParams.Add("$fields", schemaFieldsQuery);
 
-            if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
+            //Send the Request
+            HttpResponseMessage response = await GetAsync(requestUri, queryParams);
+
+            //Handle the Response
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
-                //handle according to established exception policy
-                throw (new ManufacturingResponseException(requestResponse));
+                // handle according to established exception policy
+                throw (new ManufacturingResponseException(response));
+            }
+
+            //deserialize
+
+            return await DeserializeResponse<NlsLabeledItemSet2<ManufacturingItem>>(response, _maskName, _includeFieldsNames);
+            
+        }
+
+        public async Task<T> DeserializeResponse<T>(HttpResponseMessage response, string maskName, IList<string> fieldsList = null)
+        {
+            Json3DXSchemaConverter<ManufacturingItem> jsonConverter = new DefaultMaskSchemaConverter<ManufacturingItem>(maskName);
+        
+            // Decorate mask with fields
+            if ((fieldsList != null) && (fieldsList.Count > 0))
+            {
+                foreach (string fieldsName in fieldsList)
+                {
+                    jsonConverter = new DefaultFieldsSchemaConverter<ManufacturingItem>(fieldsName, jsonConverter);
+                }
             }
 
             var deserializeOptions = new JsonSerializerOptions();
-            deserializeOptions.Converters.Add(new ManufacturingItemDetailsConverter());
+            
+            deserializeOptions.Converters.Add(jsonConverter);
 
-            return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<ManufacturingItem>>(deserializeOptions);
-        }
-
-        public async Task<NlsLabeledItemSet<ManufacturingItem>> GetManufacturingItem(string _mfgItemId)
-        {
-            string searchManufacturingItems = string.Format("{0}{1}/{2}", GetBaseResource(), MANUFACTURING_ITEM, _mfgItemId);
-
-            ManufacturingItemMask mfgItemMask = ManufacturingItemMask.Default;
-
-            // masks
-            Dictionary<string, string> queryParams = new Dictionary<string, string>();
-            queryParams.Add("$mask", mfgItemMask.GetString());
-
-            HttpResponseMessage requestResponse = await GetAsync(searchManufacturingItems, queryParams);
-
-            if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
-            {
-                //handle according to established exception policy
-                throw (new ManufacturingResponseException(requestResponse));
-            }
-
-            var deserializeOptions = new JsonSerializerOptions();
-            deserializeOptions.Converters.Add(new ManufacturingItemDetailsConverter());
-
-            return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<ManufacturingItem>>(deserializeOptions);
-        }
-
-        public async Task<NlsLabeledItemSet<ManufacturingItem>> GetManufacturingItemFields(string _mfgItemId, ManufacturingItemFields _mfgItemFields)
-        {
-            string searchManufacturingItems = string.Format("{0}{1}/{2}", GetBaseResource(), MANUFACTURING_ITEM, _mfgItemId);
-
-            ManufacturingItemMask mfgItemMask = ManufacturingItemMask.Default;
-
-            // masks
-            Dictionary<string, string> queryParams = new Dictionary<string, string>();
-            queryParams.Add("$mask", mfgItemMask.GetString());
-            queryParams.Add("$fields", _mfgItemFields.ToString());
-
-            HttpResponseMessage requestResponse = await GetAsync(searchManufacturingItems, queryParams);
-
-            if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
-            {
-                //handle according to established exception policy
-                throw (new ManufacturingResponseException(requestResponse));
-            }
-
-            var deserializeOptions = new JsonSerializerOptions();
-            deserializeOptions.Converters.Add(new ManufacturingItemDetailsConverter());
-
-            return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<ManufacturingItem>>(deserializeOptions);
-        }
-
-        public async Task<NlsLabeledItemSet<ManufacturingItem>> GetManufacturingItemFieldsDetails(string _mfgItemId, ManufacturingItemFields _fields = null, ManufacturingItemMask _mask = ManufacturingItemMask.Details)
-        {
-            string getManufacturingItem = string.Format("{0}{1}/{2}", GetBaseResource(), MANUFACTURING_ITEM, _mfgItemId);
-
-            //ManufacturingItemMask mfgItemMask = ManufacturingItemMask.Details;
-
-            // masks
-            Dictionary<string, string> queryParams = new Dictionary<string, string>();
-            queryParams.Add("$mask", _mask.GetString());
-
-            string fields = "*";
-
-            if (_fields != null)
-                fields = _fields.ToString();
-
-            //queryParams.Add("$fields", fields);
-
-            HttpResponseMessage requestResponse = await GetAsync(getManufacturingItem, queryParams);
-
-            if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
-            {
-                //handle according to established exception policy
-                throw (new ManufacturingResponseException(requestResponse));
-            }
-
-            var deserializeOptions = new JsonSerializerOptions();
-            deserializeOptions.Converters.Add(new ManufacturingItemDetailsConverter());
-
-            return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<ManufacturingItem>>(deserializeOptions);
-
+            return await response.Content.ReadFromJsonAsync<T>(deserializeOptions);
         }
         #endregion
 
@@ -315,11 +330,9 @@ namespace ds.delmia.dsmfg.service
             string getScopeItemLinkResourceUri = string.Format("{0}{1}/{2}{3}", GetBaseResource(), MANUFACTURING_ITEM, _mfgItemId, SCOPE_ENG_ITEM);
 
             // Specification (1.3.0) does not specify any mask
-            ScopeEngItemMask mfgItemMask = ScopeEngItemMask.Default;
-
             // masks
             Dictionary<string, string> queryParams = new Dictionary<string, string>();
-            queryParams.Add("$mask", mfgItemMask.GetString());
+            queryParams.Add("$mask", MFGResourceNames.DSMFG_SCOPEENGITEM_MASK_DEFAULT);
 
             HttpResponseMessage requestResponse = await GetAsync(getScopeItemLinkResourceUri);
 
@@ -337,15 +350,13 @@ namespace ds.delmia.dsmfg.service
         #region dsmfg:ManufacturingInstance
 
         // Gets all the Manufacturing Item Instances
-        public async Task<NlsLabeledItemSet<ManufacturingInstance>> GetManufacturingItemInstances(string _mfgItemId)
+        public async Task<NlsLabeledItemSet2<ManufacturingInstance>> GetManufacturingItemInstances(string _mfgItemId)
         {
             string getManufacturingInstances = string.Format("{0}{1}/{2}{3}", GetBaseResource(), MANUFACTURING_ITEM, _mfgItemId, MANUFACTURING_INSTANCE );
 
-            ManufacturingItemInstanceMask mfgItemInstanceMask = ManufacturingItemInstanceMask.Default;
-
             // masks
             Dictionary<string, string> queryParams = new Dictionary<string, string>();
-            queryParams.Add("$mask", mfgItemInstanceMask.GetString());
+            queryParams.Add("$mask", MFGResourceNames.DSMFG_MFGINST_MASK_DEFAULT);
 
             HttpResponseMessage requestResponse = await GetAsync(getManufacturingInstances, queryParams);
 
@@ -355,18 +366,16 @@ namespace ds.delmia.dsmfg.service
                 throw (new ManufacturingResponseException(requestResponse));
             }
 
-            return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<ManufacturingInstance>>();
+            return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet2<ManufacturingInstance>>();
         }
 
-        public async Task<NlsLabeledItemSet<ManufacturingInstanceReference>> GetManufacturingItemInstancesWithReference(string _mfgItemId)
+        public async Task<NlsLabeledItemSet2<ManufacturingInstanceReference>> GetManufacturingItemInstancesWithReference(string _mfgItemId)
         {
             string getManufacturingInstances = string.Format("{0}{1}/{2}{3}", GetBaseResource(), MANUFACTURING_ITEM, _mfgItemId, MANUFACTURING_INSTANCE);
 
-            ManufacturingItemInstanceMask mfgItemInstanceMask = ManufacturingItemInstanceMask.Details;
-
             // masks
             Dictionary<string, string> queryParams = new Dictionary<string, string>();
-            queryParams.Add("$mask", mfgItemInstanceMask.GetString());
+            queryParams.Add("$mask", MFGResourceNames.DSMFG_MFGINST_MASK_DETAILS);
 
             HttpResponseMessage requestResponse = await GetAsync(getManufacturingInstances, queryParams);
 
@@ -376,10 +385,9 @@ namespace ds.delmia.dsmfg.service
                 throw (new ManufacturingResponseException(requestResponse));
             }
 
-            return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<ManufacturingInstanceReference>>();
+            return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet2<ManufacturingInstanceReference>>();
 
         }
-
 
         #endregion
     }

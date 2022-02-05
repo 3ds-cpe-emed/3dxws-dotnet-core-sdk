@@ -14,13 +14,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //------------------------------------------------------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
 namespace ds.enovia.common.model
 {
     public class ItemAttributes
     {
+        //Standard properties
         private const string TYPE         = "type";
         private const string ID           = "id";
         private const string NAME         = "name";
@@ -43,13 +47,6 @@ namespace ds.enovia.common.model
         public ItemAttributes()
         {
             m_dictionary = new Dictionary<string, object>();
-        }
-
-        public ItemAttributes(Dictionary<string, object> _atts)
-        {
-            m_dictionary = new Dictionary<string, object>();
-
-            customerAttributes = _atts;
         }
 
         public void Add(string _key, object _value)
@@ -202,7 +199,23 @@ namespace ds.enovia.common.model
                 m_dictionary[CESTAMP] = value;
             }
         }
-
+        /// <summary>
+        /// Check Customization section under https://media.3ds.com/support/documentation/developer/Cloud/en/DSDoc.htm?show=CAA3DSpaceREST/CAAXInfraWSTaOverview.htm
+        /// Customer attributes can only be added now onPremise through TXO. (2022XGA)
+        /// 
+        /// "customerAttributes": {
+        ///     "attr1": "value1",
+        ///     "attr2": "value2",
+        ///     "CUSTOM_Extension": {
+        ///              "attr3": "value3",
+        ///              "attr4": "value4"
+        ///     },
+        ///     "CUSTOM_AttributeGroup": {
+        ///             "attr5": "value5",
+        ///             "attr6": "value6"
+        ///             }
+        /// }
+        /// </summary>
         [JsonPropertyName(CUSTOMERATTRIBUTES)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public IDictionary<string, object> customerAttributes

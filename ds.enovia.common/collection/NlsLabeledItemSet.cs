@@ -22,4 +22,9 @@ namespace ds.enovia.common.collection
     {
         public Dictionary<string, string> nlsLabel { get; set; }
     }
+
+    public class NlsLabeledItemSet2<T> : ItemSet2<T>
+    {
+        public Dictionary<string, string> nlsLabel { get; set; }
+    }
 }

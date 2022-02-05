@@ -22,9 +22,18 @@ namespace ds.enovia.dseng.model
 {
     public class EngineeringItemPatchAttributes : ItemAttributes
     {
-        [JsonPropertyName("dseno:EnterpriseAttributes")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public IDictionary<string, object> EnterpriseAttributes { get; set; }
+        private const string ENTERPRISE_ATTS = "dseno:EnterpriseAttributes";
 
+        [JsonPropertyName(ENTERPRISE_ATTS)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public IDictionary<string, object> EnterpriseAttributes
+        {
+            get { return m_dictionary.ContainsKey(ENTERPRISE_ATTS) ? (IDictionary<string, object>)m_dictionary[ENTERPRISE_ATTS] : null; }
+            set
+            {
+                //Note that if key doesn't exist gets created
+                m_dictionary[ENTERPRISE_ATTS] = value;
+            }
+        }
     }
 }

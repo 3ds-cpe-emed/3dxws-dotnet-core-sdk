@@ -38,4 +38,10 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="dsmfg\model\instance\" />
+    <Folder Include="dsmfg\model\relationship\" />
+    <Folder Include="dsprcs\mask\" />
+  </ItemGroup>
+
 </Project>
