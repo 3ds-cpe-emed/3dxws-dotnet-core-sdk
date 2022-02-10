@@ -16,8 +16,6 @@
 
 using ds.delmia.dsmfg.interfaces;
 using ds.enovia.common.serialization;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace ds.delmia.dsmfg.model.reference
 {

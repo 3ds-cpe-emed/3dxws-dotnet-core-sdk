@@ -1,5 +1,5 @@
-﻿//------------------------------------------------------------------------------------------------------------------------------------
-// Copyright 2020 Dassault Systèmes - CPE EMED
+﻿// ------------------------------------------------------------------------------------------------------------------------------------
+// Copyright 2022 Dassault Systèmes - CPE EMED
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
 // files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify,
@@ -8,36 +8,33 @@
 //
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 // OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
 // BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//------------------------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------------------------
+
+using ds.authentication;
+using ds.delmia.dsmfg.exception;
+using ds.delmia.dsmfg.interfaces;
+using ds.delmia.dsmfg.model;
+using ds.delmia.dsmfg.model.reference;
+using ds.delmia.dsmfg.schema;
+using ds.delmia.model.collections;
+using ds.enovia.common.collection;
+using ds.enovia.common.interfaces.attributes;
+using ds.enovia.common.model;
+using ds.enovia.common.search;
+using ds.enovia.common.serialization;
+using ds.enovia.service;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Web;
-
-using ds.authentication;
-
-using ds.enovia.service;
-
-using ds.enovia.common.collection;
-using ds.enovia.common.model;
-using ds.enovia.common.search;
-using ds.enovia.common.serialization;
-
-using ds.delmia.dsmfg.exception;
-using ds.delmia.dsmfg.model;
-using ds.delmia.dsmfg.schema;
-using ds.enovia.common.interfaces.attributes;
-using System.Text.Json.Serialization;
-using ds.delmia.model.collections;
-using ds.delmia.dsmfg.model.reference;
-using ds.delmia.dsmfg.interfaces;
 
 namespace ds.delmia.dsmfg.service
 {

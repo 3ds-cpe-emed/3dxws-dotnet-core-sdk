@@ -14,17 +14,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //------------------------------------------------------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-
-using ds.enovia.common.helper;
-using ds.enovia.common.interfaces;
-using ds.enovia.common.model;
-
 namespace ds.enovia.common.serialization
 {
 
@@ -45,7 +34,7 @@ namespace ds.enovia.common.serialization
     //                fieldNameList.Add(fields.Name);
     //            }
     //        }
-            
+
     //        Initialize(_mask.Name, fieldNameList);
     //    }
 
@@ -149,7 +138,7 @@ namespace ds.enovia.common.serialization
 
     //        return (T)__item;
     //    }
-    
+
 
     //    private void ReadProperties(object _item, ref Utf8JsonReader _reader, PropertyInfo[] _properties)
     //    {
@@ -286,6 +275,6 @@ namespace ds.enovia.common.serialization
     //    }
     //    #endregion
 
-       
+
     //}
 }
