@@ -45,8 +45,10 @@ namespace ds.enovia.document.service
 
         private const string SEARCH = "/search";
 
-        private const string ATTACHMENT = "Reference Document";
-        private const string SPECIFICATION = "PLMDocConnection";
+        private const string ATTACHMENT           = "Reference Document";
+        private const string SPECIFICATION_LEGACY = "PLMDocConnection";
+        private const string SPECIFICATION        = "SpecificationDocument";
+
         private const string SOURCE = "from";
 
         private static ConcurrentBag<string> m_activeFileUploads = new ConcurrentBag<string>();
