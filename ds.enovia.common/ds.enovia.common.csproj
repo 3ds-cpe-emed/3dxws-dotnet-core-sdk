@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>2.0.9</Version>
+    <Version>2.0.11</Version>
     <Authors>Dassault Systèmes - EMED CPE</Authors>
     <Company>Dassault Systèmes</Company>
     <Description>3DEXPERIENCE Dotnet Core SDK for Enovia (shared base) web services</Description>
@@ -14,7 +14,7 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ds.enovia.common.snk</AssemblyOriginatorKeyFile>
     <PackageLicenseFile>MITLicense.md</PackageLicenseFile>
-    <PackageReleaseNotes>upd: add type attribute to ItemAttributes</PackageReleaseNotes>
+    <PackageReleaseNotes>add: search by free text (SearchByFreeText)</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</RepositoryUrl>
   </PropertyGroup>
 

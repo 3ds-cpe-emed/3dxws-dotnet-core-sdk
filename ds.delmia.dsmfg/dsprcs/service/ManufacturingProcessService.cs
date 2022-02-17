@@ -31,10 +31,11 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using ds.delmia.dsprcs.model;
 using ds.delmia.model;
+using System.Web;
 
 namespace ds.delmia.dsprcs.service
 {
-    public class ManufacturingProcessService : EnoviaBaseService
+    public class ManufacturingProcessService : EnoviaBaseService, I3DXSearchable<ManufacturingProcess>
     {
         private const string BASE_RESOURCE = "/resources/v1/modeler/dsprcs";
         private const string SEARCH = "/search";
@@ -51,6 +52,36 @@ namespace ds.delmia.dsprcs.service
         }
 
         #region dsmfg:ManufacturingProcess
+
+        #region Search
+        public async Task<List<NlsLabeledItemSet<ManufacturingProcess>>> SearchAll(SearchQuery _searchQuery)
+        {
+            return await SearchUtils<ManufacturingProcess>.SearchAllAsync(this, _searchQuery);
+        }
+
+        public async Task<NlsLabeledItemSet<ManufacturingProcess>> SearchAsync(SearchQuery _searchQuery, long _skip, long _top, string _mask = null)
+        {
+            string searchManufacturingProcesses = string.Format("{0}{1}{2}", GetBaseResource(), MANUFACTURING_PROCESS, SEARCH);
+
+            ManufacturingProcessMask mfgPrcMask = ManufacturingProcessMask.Default;
+
+            // masks
+            Dictionary<string, string> queryParams = new Dictionary<string, string>();
+            queryParams.Add("$mask", mfgPrcMask.GetString());
+            queryParams.Add("$skip", _skip.ToString());
+            queryParams.Add("$top", _top.ToString());
+            queryParams.Add("$searchStr", HttpUtility.UrlEncode(_searchQuery.GetSearchString()));
+
+            HttpResponseMessage requestResponse = await GetAsync(searchManufacturingProcesses, queryParams);
+
+            if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                //handle according to established exception policy
+                throw (new ManufacturingResponseException(requestResponse));
+            }
+
+            return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<ManufacturingProcess>>();
+        }
 
         //Gets a indexed search result of Manufacturing Item
         public async Task<NlsLabeledItemSet<ManufacturingProcess>> Search(SearchQuery _searchQuery, long _skip = 0, long _top = 100)
@@ -76,7 +107,7 @@ namespace ds.delmia.dsprcs.service
 
             return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<ManufacturingProcess>>();
         }
-
+        #endregion
         public async Task<NlsLabeledItemSet<ManufacturingProcess>> CreateManufacturingProcess(ManufacturingProcessCreate _mfgProcess)
         {
             ManufacturingModelSetCreate itemsCreate = new ManufacturingModelSetCreate();
