@@ -24,7 +24,7 @@ namespace ds.enovia.dseng.model
     {
        
         [JsonPropertyName("dseng:EnterpriseReference")]
-        public EnterpriseReferenceCreate enterpriseReference { get; set; }
+        public EnterpriseReference enterpriseReference { get; set; }
 
         [JsonPropertyName("dseno:EnterpriseAttributes")]
         public Dictionary<string, object> enterpriseAttributes { get; set; }
