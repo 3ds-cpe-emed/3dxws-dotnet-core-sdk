@@ -14,20 +14,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //------------------------------------------------------------------------------------------------------------------------------------
 
-using ds.enovia.common.model;
+using ds.enovia.common;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace ds.enovia.dseng.model
 {
-    public class EngineeringItem : Item
+    public class EngineeringItemPatch : SerializableJsonObject
     {
-       
+        public EngineeringItemPatch(EngineeringItem _item)
+        {
+            this.title = _item.title;
+            this.description = _item.description;
+            this.cestamp = _item.cestamp;
+            this.enterpriseAttributes = _item.enterpriseAttributes;
+            this.enterpriseReference = _item.enterpriseReference;
+        }
+
+        public string title { get; set; }
+        public string description { get; set; }
+        public string cestamp { get; set; }
+
         [JsonPropertyName("dseng:EnterpriseReference")]
         public EnterpriseReference enterpriseReference { get; set; }
 
         [JsonPropertyName("dseno:EnterpriseAttributes")]
         public Dictionary<string, object> enterpriseAttributes { get; set; }
-      
     }
 }
