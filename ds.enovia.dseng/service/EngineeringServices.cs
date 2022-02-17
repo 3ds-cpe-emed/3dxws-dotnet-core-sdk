@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -186,6 +187,39 @@ namespace ds.enovia.dseng.service
             string bodyPatchMessage = JsonSerializer.Serialize(_atts);//.toJson();
 
             HttpResponseMessage requestResponse = await PatchAsync(patchEngineeringItemEndpoint, queryParams, null, bodyPatchMessage);
+
+            if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                //handle according to established exception policy
+                throw (new EngineeringResponseException(requestResponse));
+            }
+
+            NlsLabeledItemSet<EngineeringItem> returnSet = await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<EngineeringItem>>();
+            if ((returnSet != null) && (returnSet.totalItems == 1))
+            {
+                return returnSet.member[0];
+            }
+
+            return null;
+        }
+
+        public async Task<EngineeringItem> UpdateEngineeringItem(EngineeringItem _item)
+        {
+            string patchEngineeringItemEndpoint = string.Format("{0}/{1}", GetBaseResource(), _item.id);
+
+            EngineeringItemPatch payload = new EngineeringItemPatch(_item);
+
+            // If EnterpriseReference or EnterpriseAttributes has no content (ex. the EIN does not exists),
+            // the inner collection must be removed from paylod to avoid Bad Request response;
+            // set EnterpriseReference or EnterpriseAttributes to null to skip it
+            JsonSerializerOptions options = new JsonSerializerOptions()
+            {
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            };
+
+            string messageBody = JsonSerializer.Serialize(payload, options);
+
+            HttpResponseMessage requestResponse = await PatchAsync(patchEngineeringItemEndpoint, null, null, messageBody);
 
             if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
             {
