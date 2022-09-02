@@ -27,7 +27,7 @@ namespace ds.enovia.common.search
 
         public override string GetSearchString()
         {
-            return string.Format("project:{0}", m_collabSpaceName);
+            return string.Format("project:\"{0}\"", m_collabSpaceName);
         }
     }
 }
