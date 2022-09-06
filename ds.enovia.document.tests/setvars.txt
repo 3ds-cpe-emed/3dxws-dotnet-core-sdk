@@ -1,0 +1,9 @@
+﻿setx DS3DXWS_AUTH_USERNAME AAA27
+setx DS3DXWS_AUTH_PASSWORD ******
+
+//rem - for Euromed
+setx DS3DXWS_AUTH_PASSPORT https://eu1-ds-iam.3dexperience.3ds.com:443/3DPassport
+setx DS3DXWS_AUTH_ENOVIA https://r1132100982379-eu1-space.3dexperience.3ds.com:443/enovia
+setx DS3DXWS_AUTH_TENANT R1132100982379
+
+//rem - for CPE Euromed
