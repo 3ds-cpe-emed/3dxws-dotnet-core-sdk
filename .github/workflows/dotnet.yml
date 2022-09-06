@@ -3,8 +3,8 @@ name: Build 3DX .NET Core SDK Solution and Push NUGET Packages
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  # pull_request:
+  #  branches: [ master ]
 
 env:
   PACKAGE_OUTPUT_DIR: ${{ github.workspace }}\output
