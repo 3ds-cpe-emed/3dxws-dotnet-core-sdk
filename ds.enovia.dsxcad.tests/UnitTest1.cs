@@ -72,13 +72,13 @@ namespace ds.enovia.dsxcad.tests
             IPassportAuthentication passport = await Authenticate();
 
             //Search for the xCAD Family by name and revision
-            xCADFamilyRepresentationService xcadFamilyRepService = new xCADFamilyRepresentationService(m_enoviaUrl, passport);
-            xcadFamilyRepService.SecurityContext = _securityContext;
-            xcadFamilyRepService.Tenant = m_tenant;
+            xCADFamilyRepresentationService xcadService = new xCADFamilyRepresentationService(m_enoviaUrl, passport);
+            xcadService.SecurityContext = _securityContext;
+            xcadService.Tenant = m_tenant;
 
             SearchByNameRevision query = new SearchByNameRevision(_cadfamilymodelName, _cadfamilymodelRevision);
 
-            IList<xCADFamilyRepresentation> searchReturnSet = await xcadFamilyRepService.Search(query);
+            IList<xCADFamilyRepresentation> searchReturnSet = await xcadService.Search(query);
 
             Assert.IsNotNull(searchReturnSet);
             Assert.NotZero(searchReturnSet.Count, $"Cannot find XCADFamilyRepresentation with name = '{_cadfamilymodelName}' and revision = '{_cadfamilymodelRevision}'");
@@ -92,12 +92,106 @@ namespace ds.enovia.dsxcad.tests
             #endregion
 
             #region Act - download authoring file
-            FileInfo downloadedFile = await xcadFamilyRepService.DownloadAuthoringFile(downloadHttpClient, partId, _downloadPath);
+            FileInfo downloadedFile = await xcadService.DownloadAuthoringFile(downloadHttpClient, partId, _downloadPath);
             #endregion
 
             #region Assert
             Assert.IsNotNull(downloadedFile);
             #endregion
         }
-    }
+      [TestCase("VPLMAdmin.Company Name.Default", "AAA27 Personal")]
+      public async Task Search_Products_And_Get_Details_of_First(string _securityContext, string _collaborativeSpace)
+      {
+        
+         //Authenticate
+         IPassportAuthentication passport = await Authenticate();
+
+         //Search for the xCAD Family by name and revision
+         xCADProductService xcadService = new xCADProductService(m_enoviaUrl, passport);
+         xcadService.SecurityContext = _securityContext;
+         xcadService.Tenant = m_tenant;
+
+         SearchByCollaborativeSpace query = new SearchByCollaborativeSpace(_collaborativeSpace);
+
+         IList<xCADProduct> searchReturnSet = await xcadService.Search(query);
+
+         Assert.IsNotNull(searchReturnSet);
+         Assert.NotZero(searchReturnSet.Count, $"Cannot find Products in Collaborative Space'{_collaborativeSpace}'");
+
+         xCADProduct product = searchReturnSet[0];
+         string productId = product.id;
+
+         xCADProduct productDetails  = await xcadService.GetXCADProduct(productId, xCADProductDetails.Details);
+
+         #region Assert
+         Assert.IsNotNull(productDetails);
+
+         Assert.AreEqual(productId, productDetails.id);
+         #endregion
+      }
+
+
+      [TestCase("VPLMAdmin.Company Name.Default", "AAA27 Personal")]
+      public async Task Search_Representations_And_Get_Details_of_First(string _securityContext, string _collaborativeSpace)
+      {
+
+         //Authenticate
+         IPassportAuthentication passport = await Authenticate();
+
+         //Search for the xCAD Family by name and revision
+         xCADRepresentationService xcadService = new xCADRepresentationService(m_enoviaUrl, passport);
+         xcadService.SecurityContext = _securityContext;
+         xcadService.Tenant = m_tenant;
+
+         SearchByCollaborativeSpace query = new SearchByCollaborativeSpace(_collaborativeSpace);
+
+         IList<xCADRepresentation> searchReturnSet = await xcadService.Search(query);
+
+         Assert.IsNotNull(searchReturnSet);
+         Assert.NotZero(searchReturnSet.Count, $"Cannot find Representations in Collaborative Space'{_collaborativeSpace}'");
+
+         xCADRepresentation rep = searchReturnSet[0];
+         string repId = rep.id;
+
+         xCADRepresentation repDetails = await xcadService.GetXCADRepresentation(repId, xCADRepresentationDetails.Details);
+
+         #region Assert
+         Assert.IsNotNull(repDetails);
+
+         Assert.AreEqual(repId, repDetails.id);
+         #endregion
+      }
+
+
+      [TestCase("VPLMAdmin.Company Name.Default", "AAA27 Personal")]
+      public async Task Search_Templates_And_Get_Details_of_First(string _securityContext, string _collaborativeSpace)
+      {
+
+         //Authenticate
+         IPassportAuthentication passport = await Authenticate();
+
+         //Search for the xCAD Family by name and revision
+         xCADTemplateService xcadService = new xCADTemplateService(m_enoviaUrl, passport);
+         xcadService.SecurityContext = _securityContext;
+         xcadService.Tenant = m_tenant;
+
+         SearchByCollaborativeSpace query = new SearchByCollaborativeSpace(_collaborativeSpace);
+
+         IList<xCADTemplate> searchReturnSet = await xcadService.Search(query);
+
+         Assert.IsNotNull(searchReturnSet);
+         Assert.NotZero(searchReturnSet.Count, $"Cannot find Templates in Collaborative Space'{_collaborativeSpace}'");
+
+         xCADTemplate template = searchReturnSet[0];
+         string templateId = template.id;
+
+         xCADTemplate templateDetails = await xcadService.GetXCADTemplate(templateId, xCADTemplateDetails.Default);
+
+         #region Assert
+         Assert.IsNotNull(templateDetails);
+
+         Assert.AreEqual(templateId, templateDetails.id);
+         #endregion
+      }
+   }
 }
