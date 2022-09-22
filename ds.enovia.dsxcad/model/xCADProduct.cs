@@ -24,6 +24,8 @@ namespace ds.enovia.dsxcad.model
         [JsonPropertyName("dsxcad:xCADAttributes")]
         public DSXCadXCadAttributes xCADAttributes;
 
+        [JsonPropertyName("dsxcad:AuthoringFile")]
+        public AuthoringFile AuthoringFile;
 
     }
 }
