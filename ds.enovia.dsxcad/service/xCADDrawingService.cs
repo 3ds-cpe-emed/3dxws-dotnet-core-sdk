@@ -16,6 +16,7 @@
 
 using ds.authentication;
 using ds.enovia.common.collection;
+using ds.enovia.common.model;
 using ds.enovia.common.search;
 using ds.enovia.dsxcad.exception;
 using ds.enovia.dsxcad.model;
@@ -25,6 +26,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ds.enovia.dsxcad.service
@@ -40,8 +42,10 @@ namespace ds.enovia.dsxcad.service
     {        
         private const string BASE_RESOURCE = "/resources/v1/modeler/dsxcad/dsxcad:Drawing";
         private const string SEARCH = "/search";
+        private const string LOCATE = "/Locate";
 
-        public override string GetBaseResource()
+
+      public override string GetBaseResource()
         {
             return BASE_RESOURCE;
         }
@@ -145,5 +149,32 @@ namespace ds.enovia.dsxcad.service
 
             return null;
         }
-    }
+
+      //Locates Drawings by Engineering Items / Parts
+      public async Task<ItemSet<ReferenceIdResponse>> Locate(BusinessObjectId _id)
+      {
+         // - prepare data ---
+         ReferenceIdCollection refIdColl = new ReferenceIdCollection();
+         
+         refIdColl.referencedObject.Add(_id);
+
+         string bodyPatchMessage = JsonSerializer.Serialize(refIdColl);//.toJson();
+
+         // - call web service ---
+         
+         string locate = string.Format("{0}{1}", GetBaseResource(), LOCATE);
+
+         HttpResponseMessage requestResponse = await PostAsync(locate, null, null, bodyPatchMessage);
+
+         // - handle response ---
+         if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
+         {
+            //handle according to established exception policy
+            throw (new GetXCADDrawingException(requestResponse));
+         }
+
+         return await requestResponse.Content.ReadFromJsonAsync<ItemSet<ReferenceIdResponse>>();
+
+      }
+   }
 }
