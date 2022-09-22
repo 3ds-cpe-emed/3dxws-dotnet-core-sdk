@@ -130,6 +130,38 @@ namespace ds.enovia.dsxcad.tests
          #endregion
       }
 
+      [TestCase("VPLMAdmin.Company Name.Default", "AAA27 Personal")]
+      public async Task Search_Parts_And_Get_Details_of_First(string _securityContext, string _collaborativeSpace)
+      {
+
+         //Authenticate
+         IPassportAuthentication passport = await Authenticate();
+
+         //Search for the xCAD Family by name and revision
+         xCADPartService xcadService = new xCADPartService(m_enoviaUrl, passport);
+         xcadService.SecurityContext = _securityContext;
+         xcadService.Tenant = m_tenant;
+
+         SearchByCollaborativeSpace query = new SearchByCollaborativeSpace(_collaborativeSpace);
+
+         IList<xCADPart> searchReturnSet = await xcadService.Search(query);
+
+         Assert.IsNotNull(searchReturnSet);
+         Assert.NotZero(searchReturnSet.Count, $"Cannot find Products in Collaborative Space'{_collaborativeSpace}'");
+
+         xCADPart part = searchReturnSet[0];
+         string partId = part.id;
+
+         xCADPart partDetails = await xcadService.GetXCADPart(partId, xCADPartDetails.Details);
+
+         #region Assert
+         Assert.IsNotNull(partDetails);
+
+         Assert.AreEqual(partId, partDetails.id);
+
+         Assert.IsNotNull(partDetails.AuthoringFile);
+         #endregion
+      }
 
       [TestCase("VPLMAdmin.Company Name.Default", "AAA27 Personal")]
       public async Task Search_Representations_And_Get_Details_of_First(string _securityContext, string _collaborativeSpace)
