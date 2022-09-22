@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ds.enovia.dsxcad", "..\ds.e
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ds.enovia", "..\ds.enovia\ds.enovia.csproj", "{8164E3F1-19F7-4F23-AD62-761AFD319483}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ds.enovia.common", "..\ds.enovia.common\ds.enovia.common.csproj", "{477F6697-EF34-49A8-A8A8-778E254D32E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{8164E3F1-19F7-4F23-AD62-761AFD319483}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8164E3F1-19F7-4F23-AD62-761AFD319483}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8164E3F1-19F7-4F23-AD62-761AFD319483}.Release|Any CPU.Build.0 = Release|Any CPU
+		{477F6697-EF34-49A8-A8A8-778E254D32E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{477F6697-EF34-49A8-A8A8-778E254D32E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{477F6697-EF34-49A8-A8A8-778E254D32E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{477F6697-EF34-49A8-A8A8-778E254D32E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

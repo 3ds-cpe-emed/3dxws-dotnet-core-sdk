@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ds.authentication\ds.authentication.csproj" />
+    <ProjectReference Include="..\ds.enovia.common\ds.enovia.common.csproj" />
     <ProjectReference Include="..\ds.enovia.dsxcad\ds.enovia.dsxcad.csproj" />
     <ProjectReference Include="..\ds.enovia\ds.enovia.csproj" />
   </ItemGroup>

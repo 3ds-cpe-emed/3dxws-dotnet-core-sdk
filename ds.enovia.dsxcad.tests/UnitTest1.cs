@@ -1,5 +1,7 @@
 using ds.authentication;
 using ds.authentication.redirection;
+using ds.enovia.common.collection;
+using ds.enovia.common.model;
 using ds.enovia.common.search;
 using ds.enovia.dsxcad.model;
 using ds.enovia.dsxcad.service;
@@ -225,5 +227,55 @@ namespace ds.enovia.dsxcad.tests
          Assert.AreEqual(templateId, templateDetails.id);
          #endregion
       }
+
+
+      [TestCase("VPLMAdmin.Company Name.Default", "AAA27 Personal")]
+      public async Task LocateDrawing(string _securityContext, string _collaborativeSpace)
+      {
+
+         //Authenticate
+         IPassportAuthentication passport = await Authenticate();
+
+         //Search for the xCAD Family by name and revision
+         BusinessObjectId id1 = new BusinessObjectId();
+
+         id1.id = "79DD880FF25300005F7F0CEA000E4CE1";
+         id1.type = "dseng:EngItem";
+         id1.source = "$3DSpace";
+         id1.relativePath = "resource/v1/dseng/dseng:EngItem/79DD880FF25300005F7F0CEA000E4CE1";
+
+         xCADDrawingService xcadService = new xCADDrawingService(m_enoviaUrl, passport);
+         xcadService.SecurityContext = _securityContext;
+         xcadService.Tenant = m_tenant;
+
+         ItemSet<ReferenceIdResponse> id1Response = await xcadService.Locate(id1);
+
+         Assert.AreEqual(id1Response.totalItems, 1);
+
+         //Search for the xCAD Family by name and revision
+         BusinessObjectId id2 = new BusinessObjectId();
+
+         id2.id = "1F53D9FDBA31000061570D8E00183A91";
+         id2.type = "dsxcad:Part";
+         id2.source = "$3DSpace";
+         id2.relativePath = "resource/v1/dsxcad/dsxcad:Part/1F53D9FDBA31000061570D8E00183A91";
+
+         ItemSet<ReferenceIdResponse> id2Response = await xcadService.Locate(id2);
+
+         Assert.AreEqual(id2Response.totalItems, 1);
+
+         BusinessObjectId id3 = new BusinessObjectId();
+
+         id3.id = "35B0B3DB487B00005F0388A60006EEB9";
+         id3.type = "dsxcad:Part";
+         id3.source = "$3DSpace";
+         id3.relativePath = "resource/v1/dsxcad/dsxcad:Part/35B0B3DB487B00005F0388A60006EEB9";
+
+         ItemSet<ReferenceIdResponse> id3Response = await xcadService.Locate(id3);
+
+         Assert.AreEqual(id3Response.totalItems, 0);
+      }
+
+
    }
 }
