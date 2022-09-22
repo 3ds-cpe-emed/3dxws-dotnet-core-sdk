@@ -22,9 +22,9 @@ namespace ds.enovia.dsxcad.model
     public class xCADRepresentation : Item
     {
         [JsonPropertyName("dsxcad:xCADAttributes")]
-        public DSXCadXCadAttributes xCADAttributes;
+        public DSXCadXCadAttributes xCADAttributes { get; set; }
 
-        public string cadtype;
+        public string cadtype { get; set; }
 
-    }
+   }
 }

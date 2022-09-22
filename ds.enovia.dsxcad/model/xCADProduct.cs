@@ -22,10 +22,10 @@ namespace ds.enovia.dsxcad.model
     public class xCADProduct : Item
     {
         [JsonPropertyName("dsxcad:xCADAttributes")]
-        public DSXCadXCadAttributes xCADAttributes;
+        public DSXCadXCadAttributes xCADAttributes { get; set; }
 
         [JsonPropertyName("dsxcad:AuthoringFile")]
-        public AuthoringFile AuthoringFile;
+        public AuthoringFile AuthoringFile { get; set; }
 
-    }
+   }
 }
