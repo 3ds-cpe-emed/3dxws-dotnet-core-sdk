@@ -92,5 +92,33 @@ namespace ds.enovia.dseng.tests
 
             #endregion
         }
-    }
+
+
+      [TestCase("VPLMProjectLeader.Company Name.AAA27 Personal", "A437358E00006E50621D045E0000F2A8")]
+      public async Task Get_EngineeringItem_Usage(string _securityContext, string _engineeringItemId)
+      {
+         #region Arrange
+
+         //Authenticate
+         IPassportAuthentication passport = await Authenticate();
+
+         //Instantiate the Engineering Service wrapper
+         EngineeringServices engineeringServices = new EngineeringServices(m_enoviaUrl, passport);
+         engineeringServices.SecurityContext = _securityContext;
+         engineeringServices.Tenant = m_tenant;
+
+         #endregion
+
+         #region Act - Get Engineering Item Common attributes
+
+         EngineeringItemCommon engItemCommon = await engineeringServices.GetEngineeringItemCommon(_engineeringItemId);
+         #endregion
+
+         #region Assert
+         Assert.IsNotNull(engItemCommon);
+         Assert.AreEqual(engItemCommon.usage, "3DPart");
+
+         #endregion
+      }
+   }
 }

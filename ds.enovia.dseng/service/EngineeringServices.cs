@@ -16,6 +16,7 @@
 
 using ds.authentication;
 using ds.enovia.common.collection;
+using ds.enovia.common.model;
 using ds.enovia.common.search;
 using ds.enovia.dseng.exception;
 using ds.enovia.dseng.fields;
@@ -136,9 +137,21 @@ namespace ds.enovia.dseng.service
             return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<EngineeringItem>>();
         }
 
-        #endregion
+      #endregion
 
-        public async Task<EngineeringItem> GetEngineeringItemDetails(EngineeringItem _item, EngineeringItemFields _engItemFields = null)
+      public async Task<EngineeringItemCommon> GetEngineeringItemCommon(string _engineeringItemId, EngineeringItemFields _engItemFields = null)
+      {
+         Dictionary<string, string> queryParams = new Dictionary<string, string>();
+         queryParams.Add("$mask", "dsmveng:EngItemMask.Common");
+         if (_engItemFields != null)
+         {
+            queryParams.Add("$fields", _engItemFields.ToString());
+         }
+
+         return await _GetEngineeringItem<EngineeringItemCommon>(_engineeringItemId, queryParams);
+      }
+
+      public async Task<EngineeringItem> GetEngineeringItemDetails(EngineeringItem _item, EngineeringItemFields _engItemFields = null)
         {
             return await GetEngineeringItemDetails(_item.id, _engItemFields);
         }
@@ -152,28 +165,33 @@ namespace ds.enovia.dseng.service
                 queryParams.Add("$fields", _engItemFields.ToString());
             }
 
-            string searchResource = string.Format("{0}/{1}", GetBaseResource(), _engineeringItemId);
-
-            HttpResponseMessage requestResponse = await GetAsync(searchResource, queryParams);
-
-            if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
-            {
-                //handle according to established exception policy
-                throw (new EngineeringResponseException(requestResponse));
-            }
-
-            NlsLabeledItemSet<EngineeringItem> engItemSet =
-                     await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<EngineeringItem>>();
-
-            if ((engItemSet != null) && (engItemSet.totalItems == 1))
-            {
-                return engItemSet.member[0];
-            }
-
-            return null;
+            return await _GetEngineeringItem<EngineeringItem>(_engineeringItemId, queryParams);
         }
 
-        public async Task<EngineeringItem> PatchEngineeringItemAttributes(string _id, EngineeringItemPatchAttributes _atts, bool _details = true)
+      private async Task<T> _GetEngineeringItem<T>(string _engineeringItemId, Dictionary<string, string> _queryParams) where T : Item
+      {
+         string searchResource = string.Format("{0}/{1}", GetBaseResource(), _engineeringItemId);
+
+         HttpResponseMessage requestResponse = await GetAsync(searchResource, _queryParams);
+
+         if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
+         {
+            //handle according to established exception policy
+            throw (new EngineeringResponseException(requestResponse));
+         }
+
+         NlsLabeledItemSet<T> engItemSet =
+                  await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<T>>();
+
+         if ((engItemSet != null) && (engItemSet.totalItems == 1))
+         {
+            return (T)engItemSet.member[0];
+         }
+
+         return null;
+      }
+
+      public async Task<EngineeringItem> PatchEngineeringItemAttributes(string _id, EngineeringItemPatchAttributes _atts, bool _details = true)
         {
             string patchEngineeringItemEndpoint = string.Format("{0}/{1}", GetBaseResource(), _id);
 
