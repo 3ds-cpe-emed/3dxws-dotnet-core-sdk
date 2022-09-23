@@ -19,10 +19,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using ds.authentication;
 using ds.enovia.common.collection;
+using ds.enovia.common.model;
 using ds.enovia.common.search;
 using ds.enovia.dsxcad.exception;
 using ds.enovia.dsxcad.model;
@@ -38,6 +40,7 @@ namespace ds.enovia.dsxcad.service
     public class xCADFamilyRepresentationService : xCADDesignIntegrationService
     {
         private const string BASE_RESOURCE = "/resources/v1/modeler/dsxcad/dsxcad:FamilyRepresentation";
+        private const string LOCATE = "/locate";
 
         public override string GetBaseResource()
         {
@@ -107,5 +110,46 @@ namespace ds.enovia.dsxcad.service
             return await SearchAll<xCADFamilyRepresentation>(_searchString, GetMaskString(_mask), _top);
         }
 
-    }
+      // This accepts multiple inputs in one request however this doesn't seem very
+      // stable in the current implementation. If I pass in the payload an number of ids that are members of
+      // a CAD Family all seems ok (even if I have some doubts on the returning order in order to match the input).
+      // However, if I pass an id (a valid id) then I get an error back (400 - Something happened during Dependency Link completion.)
+      // if there is only one in the payload input array I get that and I am not able to tell to which element this
+      // problem is related. So, for security I am restricting this to only one id.
+      public async Task<MemberSet<xCADFamilyRepresentationReference>> Locate(BusinessObjectId _id)
+      {
+         BusinessObjectIdentifier businessObjectIdentifier = new BusinessObjectIdentifier();
+         businessObjectIdentifier.identifier   = _id.id;
+         businessObjectIdentifier.source       = _id.source;
+         businessObjectIdentifier.relativePath = _id.relativePath;
+         businessObjectIdentifier.type         = _id.type;
+         return await Locate(businessObjectIdentifier);
+      }
+
+      public async Task<MemberSet<xCADFamilyRepresentationReference>> Locate(BusinessObjectIdentifier _id)
+      {
+         // - prepare data ---
+         IList<BusinessObjectIdentifier> inputColl = new List<BusinessObjectIdentifier>();
+
+         inputColl.Add(_id);
+
+         string inputMessage = JsonSerializer.Serialize(inputColl);
+
+         // - call web service ---
+
+         string locate = string.Format("{0}{1}", GetBaseResource(), LOCATE);
+
+         HttpResponseMessage requestResponse = await PostAsync(locate, null, null, inputMessage);
+
+         // - handle response ---
+         if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
+         {
+            //handle according to established exception policy
+            throw (new LocateXCADFamilyException(requestResponse));
+         }
+
+         return await requestResponse.Content.ReadFromJsonAsync<MemberSet<xCADFamilyRepresentationReference>>();
+
+      }
+   }
 }
