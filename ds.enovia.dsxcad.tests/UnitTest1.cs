@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ds.enovia.dsxcad.tests
@@ -230,7 +231,7 @@ namespace ds.enovia.dsxcad.tests
 
 
       [TestCase("VPLMAdmin.Company Name.Default", "AAA27 Personal")]
-      public async Task LocateDrawing(string _securityContext, string _collaborativeSpace)
+      public async Task LocatexCADDrawing(string _securityContext, string _collaborativeSpace)
       {
 
          //Authenticate
@@ -248,7 +249,7 @@ namespace ds.enovia.dsxcad.tests
          xcadService.SecurityContext = _securityContext;
          xcadService.Tenant = m_tenant;
 
-         ItemSet<ReferenceIdResponse> id1Response = await xcadService.Locate(id1);
+         ItemSet<xCADDrawingReference> id1Response = await xcadService.Locate(id1);
 
          Assert.AreEqual(id1Response.totalItems, 1);
 
@@ -260,7 +261,7 @@ namespace ds.enovia.dsxcad.tests
          id2.source = "$3DSpace";
          id2.relativePath = "resource/v1/dsxcad/dsxcad:Part/1F53D9FDBA31000061570D8E00183A91";
 
-         ItemSet<ReferenceIdResponse> id2Response = await xcadService.Locate(id2);
+         ItemSet<xCADDrawingReference> id2Response = await xcadService.Locate(id2);
 
          Assert.AreEqual(id2Response.totalItems, 1);
 
@@ -271,11 +272,74 @@ namespace ds.enovia.dsxcad.tests
          id3.source = "$3DSpace";
          id3.relativePath = "resource/v1/dsxcad/dsxcad:Part/35B0B3DB487B00005F0388A60006EEB9";
 
-         ItemSet<ReferenceIdResponse> id3Response = await xcadService.Locate(id3);
+         ItemSet<xCADDrawingReference> id3Response = await xcadService.Locate(id3);
 
          Assert.AreEqual(id3Response.totalItems, 0);
       }
 
+
+
+
+      [TestCase("VPLMAdmin.Company Name.Default", "ATG - SaaS Readiness")]
+      public async Task GetAndLocatexCADFamilyMembers(string _securityContext, string _collaborativeSpace)
+      {
+         //Authenticate
+         IPassportAuthentication passport = await Authenticate();
+
+         SearchByCollaborativeSpace query = new SearchByCollaborativeSpace(_collaborativeSpace);
+
+         xCADFamilyRepresentationService xcadService = new xCADFamilyRepresentationService(m_enoviaUrl, passport);
+         xcadService.SecurityContext = _securityContext;
+         xcadService.Tenant = m_tenant;
+
+         IList<xCADFamilyRepresentation> searchReturnSet = await xcadService.Search(query);
+
+         IList<string> noMemberCADFamilyList = new List<string>();
+
+         double total = searchReturnSet.Count;
+         double iCt = 0;
+         foreach (xCADFamilyRepresentation family in searchReturnSet)
+         {
+            //Console.WriteLine($"Analyzing cad family with id = {family.id}");
+            xCADFamilyRepresentation cadFamilyDetails = await xcadService.GetXCADFamilyRepresentation(family.id, xCADFamilyRepresentationDetails.Details);
+            Assert.IsNotNull(cadFamilyDetails.cadtype);
+
+            if (cadFamilyDetails.DerivedItems != null)
+            {
+               Console.WriteLine($"DerivedItems.totalItems={cadFamilyDetails.DerivedItems.totalItems}");
+
+               foreach (xCADFamilyMember familyMember in cadFamilyDetails.DerivedItems.member)
+               {
+                  MemberSet<xCADFamilyRepresentationReference> refIdResponse = await xcadService.Locate(familyMember.referencedObject);
+
+                  Assert.IsNotNull(refIdResponse);
+                  Assert.IsNotNull(refIdResponse.member);
+                  Assert.AreEqual(refIdResponse.member.Count, 1);
+                  Assert.IsNotNull(refIdResponse.member[0]);
+                  Assert.IsNotNull(refIdResponse.member[0].representation);
+                  Assert.IsNotNull(refIdResponse.member[0].representation.identifier);
+
+                  Assert.AreEqual(refIdResponse.member[0].representation.identifier, cadFamilyDetails.id);
+               }
+            }
+            else
+            {
+               noMemberCADFamilyList.Add(cadFamilyDetails.id);
+               Console.WriteLine($"DerivedItems.totalItems=0");
+            }
+
+            iCt++;
+
+            Thread.Sleep(50);
+            //if (iCt > 20)
+            //{
+            //   break;
+            //}
+         }
+
+         Console.WriteLine($"A total of {noMemberCADFamilyList.Count} CAD Families without members, out of a total of {searchReturnSet.Count}.");
+
+      }
 
    }
 }

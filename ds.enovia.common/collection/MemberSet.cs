@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------------------------------------------------------------
-// Copyright 2020 Dassault Systèmes - CPE EMED
+// Copyright 2022 Dassault Systèmes - CPE EMED
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
 // files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify,
@@ -18,9 +18,8 @@ using System.Collections.Generic;
 
 namespace ds.enovia.common.collection
 {
-    public class ItemSet<T> : MemberSet<T>
-    {
-        public long totalItems { get; set; }
- 
-    }
+   public class MemberSet<T> : SerializableJsonObject
+   {
+      public List<T> member { get; set; }
+   }
 }

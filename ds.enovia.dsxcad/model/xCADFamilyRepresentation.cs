@@ -14,6 +14,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //------------------------------------------------------------------------------------------------------------------------------------
 
+using ds.enovia.common.collection;
 using ds.enovia.common.model;
 using System.Text.Json.Serialization;
 
@@ -27,8 +28,12 @@ namespace ds.enovia.dsxcad.model
         [JsonPropertyName("dsxcad:AuthoringFile")]
         public AuthoringFile AuthoringFile { get; set; }
 
-        [JsonPropertyName("dsxcad:VisualizationFile")]
-        public VisualizationFile VisualizationFile { get; set; }
+        //There is no visualization file for CAD Families, at least not for now
+        //[JsonPropertyName("dsxcad:VisualizationFile")]
+        //public VisualizationFile VisualizationFile { get; set; }
 
-    }
+        public string cadtype { get; set; }
+
+        public ItemSet<xCADFamilyMember> DerivedItems { get; set; }
+   }
 }

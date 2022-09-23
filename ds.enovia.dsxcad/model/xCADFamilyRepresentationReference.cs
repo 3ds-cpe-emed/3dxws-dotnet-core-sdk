@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------------------------------------------------------------
-// Copyright 2020 Dassault Systèmes - CPE EMED
+// Copyright 2022 Dassault Systèmes - CPE EMED
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
 // files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify,
@@ -14,13 +14,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //------------------------------------------------------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
+using ds.enovia.common.model;
 
-namespace ds.enovia.common.collection
+namespace ds.enovia.dsxcad.model
 {
-    public class ItemSet<T> : MemberSet<T>
-    {
-        public long totalItems { get; set; }
- 
-    }
+   public class xCADFamilyRepresentationReference
+   {
+      public string identifier { get; set; }
+      public BusinessObjectIdentifier representation { get; set; }
+
+   }
 }

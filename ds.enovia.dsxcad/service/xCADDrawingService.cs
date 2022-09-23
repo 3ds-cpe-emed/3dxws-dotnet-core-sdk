@@ -151,7 +151,7 @@ namespace ds.enovia.dsxcad.service
         }
 
       //Locates Drawings by Engineering Items / Parts
-      public async Task<ItemSet<ReferenceIdResponse>> Locate(BusinessObjectId _id)
+      public async Task<ItemSet<xCADDrawingReference>> Locate(BusinessObjectId _id)
       {
          // - prepare data ---
          ReferenceIdCollection refIdColl = new ReferenceIdCollection();
@@ -173,7 +173,7 @@ namespace ds.enovia.dsxcad.service
             throw (new GetXCADDrawingException(requestResponse));
          }
 
-         return await requestResponse.Content.ReadFromJsonAsync<ItemSet<ReferenceIdResponse>>();
+         return await requestResponse.Content.ReadFromJsonAsync<ItemSet<xCADDrawingReference>>();
 
       }
    }

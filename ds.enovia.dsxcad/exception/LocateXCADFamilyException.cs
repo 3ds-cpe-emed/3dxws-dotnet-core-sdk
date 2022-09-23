@@ -14,19 +14,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //------------------------------------------------------------------------------------------------------------------------------------
 
-using ds.enovia.common.model;
+// ---------
+using System.Net.Http;
+// ---------
+using ds.enovia.common.exception;
 
-using System.Collections.Generic;
-
-namespace ds.enovia.dsxcad.model
+namespace ds.enovia.dsxcad.exception
 {
-   public class ReferenceIdResponse
+   public class LocateXCADFamilyException : ResponseException
    {
-      public string source { get; set; }
-      public string type { get; set; }
-      public string id { get; set; }
-      public string relativePath { get; set; }
-
-      public IList<BusinessObjectId> referencedObject { get; set; }
+      public LocateXCADFamilyException(HttpResponseMessage _response) : base(_response)
+      {
+      }
    }
+   
 }
