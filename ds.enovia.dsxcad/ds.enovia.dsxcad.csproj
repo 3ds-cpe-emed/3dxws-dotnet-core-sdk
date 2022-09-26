@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>2.1.14</Version>
+    <Version>2.1.15</Version>
     <Authors>Dassault Systèmes - EMED CPE</Authors>
     <Company>Dassault Systèmes</Company>
     <Description>3DEXPERIENCE Dotnet Core SDK for CAD Design Integration web services</Description>
@@ -12,7 +12,7 @@
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</PackageProjectUrl>
     <PackageTags>3DEXPERIENCE</PackageTags>
-    <PackageReleaseNotes>add: #34 - xCADFamily Locate and DerivedItems using Details Mask</PackageReleaseNotes>
+    <PackageReleaseNotes>fix: #40 - Error thrown during xCAD Part items search</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ds.enovia.dsxcad.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
