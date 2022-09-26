@@ -341,5 +341,28 @@ namespace ds.enovia.dsxcad.tests
 
       }
 
+
+      [TestCase("VPLMAdmin.Company Name.Default", "ATG - SaaS Readiness")]
+      public async Task SearchPartItems(string _securityContext, string _collaborativeSpace)
+      {
+         //Authenticate
+         IPassportAuthentication passport = await Authenticate();
+
+         SearchByFreeText query = new SearchByFreeText("([ds6w: modified] >= \"2022-09-24T09:12:50.7891897Z\" AND [ds6w: modified] <= \"2022-09-26T09:12:50.7891897Z\") AND ([ds6w: status]:(VPLM_SMB_Definition.FROZEN)) AND(project:\"AAA27 Personal\" OR project:\"ATG - SaaS Readiness\" OR project: \"CMU\")");
+         //SearchByCollaborativeSpace query = new SearchByCollaborativeSpace(_collaborativeSpace);
+
+         xCADPartService xcadService = new xCADPartService(m_enoviaUrl, passport);
+         xcadService.SecurityContext = _securityContext;
+         xcadService.Tenant = m_tenant;
+
+         IList<xCADPart> searchReturnSet = await xcadService.Search(query);
+
+        double total = searchReturnSet.Count;
+         double iCt = 0;
+
+
+         Console.WriteLine($"A total of {searchReturnSet.Count} Parts have been returned.");
+
+      }
    }
 }

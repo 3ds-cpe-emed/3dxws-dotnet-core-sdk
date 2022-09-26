@@ -88,7 +88,7 @@ namespace ds.enovia.dsxcad.service
             
             queryParams.Add("$skip", _skip.ToString());
             queryParams.Add("$top", _top.ToString());
-            queryParams.Add("$searchStr", searchString);
+            queryParams.Add("$searchStr", HttpUtility.UrlEncode(searchString));
 
             string searchResource = string.Format("{0}{1}", GetBaseResource(), SEARCH);
 
