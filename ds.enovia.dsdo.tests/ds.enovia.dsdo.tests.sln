@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32802.440
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ds.enovia.dsdo.tests", "ds.enovia.dsdo.tests.csproj", "{7557B487-C2C8-4107-913B-D78BA4130EDE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ds.authentication", "..\ds.authentication\ds.authentication.csproj", "{71723C32-3AE5-40DE-B2A0-4CD8FB2B0EAF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ds.enovia.dsdo", "..\ds.enovia.dsdo\ds.enovia.dsdo.csproj", "{0DD303A8-6DAE-43CB-B1D4-E0EE273863B7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ds.enovia", "..\ds.enovia\ds.enovia.csproj", "{548FF663-3DE0-449F-86F7-7CC69D4468EB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ds.enovia.dseng", "..\ds.enovia.dseng\ds.enovia.dseng.csproj", "{E6CF29DF-D2FD-4B81-9E6D-85DE76BCD853}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ds.enovia.dsxcad", "..\ds.enovia.dsxcad\ds.enovia.dsxcad.csproj", "{08C37C54-F13E-484E-BC51-4CCAC8F6022D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7557B487-C2C8-4107-913B-D78BA4130EDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7557B487-C2C8-4107-913B-D78BA4130EDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7557B487-C2C8-4107-913B-D78BA4130EDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7557B487-C2C8-4107-913B-D78BA4130EDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71723C32-3AE5-40DE-B2A0-4CD8FB2B0EAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71723C32-3AE5-40DE-B2A0-4CD8FB2B0EAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71723C32-3AE5-40DE-B2A0-4CD8FB2B0EAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71723C32-3AE5-40DE-B2A0-4CD8FB2B0EAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DD303A8-6DAE-43CB-B1D4-E0EE273863B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DD303A8-6DAE-43CB-B1D4-E0EE273863B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DD303A8-6DAE-43CB-B1D4-E0EE273863B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DD303A8-6DAE-43CB-B1D4-E0EE273863B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{548FF663-3DE0-449F-86F7-7CC69D4468EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{548FF663-3DE0-449F-86F7-7CC69D4468EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{548FF663-3DE0-449F-86F7-7CC69D4468EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{548FF663-3DE0-449F-86F7-7CC69D4468EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6CF29DF-D2FD-4B81-9E6D-85DE76BCD853}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6CF29DF-D2FD-4B81-9E6D-85DE76BCD853}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6CF29DF-D2FD-4B81-9E6D-85DE76BCD853}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6CF29DF-D2FD-4B81-9E6D-85DE76BCD853}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08C37C54-F13E-484E-BC51-4CCAC8F6022D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08C37C54-F13E-484E-BC51-4CCAC8F6022D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08C37C54-F13E-484E-BC51-4CCAC8F6022D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08C37C54-F13E-484E-BC51-4CCAC8F6022D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5217FAA0-B90C-4CCF-8BB7-A0D89826372A}
+	EndGlobalSection
+EndGlobal
