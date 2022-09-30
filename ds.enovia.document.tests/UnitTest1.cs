@@ -88,6 +88,59 @@ namespace ds.enovia.dseng.tests
 
             Console.WriteLine($"Total Items: {totalItems}");
 
-        }
-    }
+      }
+      
+      [TestCase("VPLMProjectLeader.Company Name.AAA27 Personal", "B27E90CCBB334129A7B73D9B0883CBA8", "863FB0B4307E495BB6543BBB90163077")]
+      public async Task Get_AttachedDocuments(string _securityContext, string _parentId0, string _parentId1)
+      {
+         //Authenticate
+         IPassportAuthentication passport = await Authenticate();
+
+         //Instantiate the Document Service wrapper
+         DocumentService documentService = new DocumentService(m_enoviaUrl, passport);
+
+         documentService.SecurityContext = _securityContext;
+         documentService.Tenant = m_tenant;
+
+         DocumentResponse<Document> attachedDocs0 = await documentService.GetAttachedDocuments(_parentId0);
+
+         Assert.IsNotNull(attachedDocs0);
+
+         Assert.IsNotNull(attachedDocs0.data);
+
+         Assert.AreEqual(0, attachedDocs0.data.Count);
+
+
+         DocumentResponse<Document> attachedDocs1 = await documentService.GetAttachedDocuments(_parentId1);
+
+         Assert.IsNotNull(attachedDocs1);
+
+         Assert.IsNotNull(attachedDocs1.data);
+
+         Assert.AreEqual(1, attachedDocs1.data.Count);
+
+      }
+
+      [TestCase("VPLMProjectLeader.Company Name.AAA27 Personal", "C437FF98237700006331747200068B1F")]
+      public async Task Get_SpecificationDocuments(string _securityContext, string _parentId0)
+      {
+         //Authenticate
+         IPassportAuthentication passport = await Authenticate();
+
+         //Instantiate the Document Service wrapper
+         DocumentService documentService = new DocumentService(m_enoviaUrl, passport);
+
+         documentService.SecurityContext = _securityContext;
+         documentService.Tenant = m_tenant;
+
+         DocumentResponse<Document> specDocs0 = await documentService.GetSpecificationDocuments(_parentId0);
+
+         Assert.IsNotNull(specDocs0);
+
+         Assert.IsNotNull(specDocs0.data);
+
+         Assert.AreEqual(1, specDocs0.data.Count);
+
+      }
+   }
 }
