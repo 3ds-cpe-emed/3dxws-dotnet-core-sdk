@@ -20,6 +20,7 @@ using ds.enovia.common.collection;
 using ds.enovia.common.search;
 using ds.enovia.document.exception;
 using ds.enovia.document.model;
+using ds.enovia.document.model.create;
 using ds.enovia.service;
 using System;
 using System.Collections.Concurrent;
@@ -67,7 +68,56 @@ namespace ds.enovia.document.service
 
       #region Public Interface
 
-      
+      // https://media.3ds.com/support/documentation/developer/Cloud/en/DSDoc.htm?show=CAADocumentWS/CAADocumentWSTaOverview.htm
+      #region Create Relationship
+      public async Task<DocumentCreationResponse<DocumentRelationshipCreated>> CreateSpecificationRelationship(string _parentId, IList<string> _documentidList)
+      {
+         return await _CreateAttachmentRelationship(SOURCE, SPECIFICATION, _parentId, _documentidList);
+      }
+
+      public async Task<DocumentCreationResponse<DocumentRelationshipCreated>> CreateAttachmentRelationship(string _parentId, IList<string> _documentidList)
+      {
+         return await _CreateAttachmentRelationship(SOURCE, ATTACHMENT, _parentId, _documentidList);
+      }
+
+      private async Task<DocumentCreationResponse<DocumentRelationshipCreated>> _CreateAttachmentRelationship(string _parentDirection, string _parentRelName, string _parentId, IList<string> _documentidList)
+      {
+         string bodyRequest = CreateJsonRelationshipPayload(_parentId, _documentidList);
+
+         IDictionary<string, string> queryParams = new Dictionary<string, string>();
+         queryParams.Add("parentDirection", HttpUtility.UrlEncode(_parentDirection));
+         queryParams.Add("parentRelName", HttpUtility.UrlEncode(_parentRelName));
+
+         HttpResponseMessage createDocumentResponse = await PostAsync(GetBaseResource(), queryParams, null, bodyRequest);
+
+         if (createDocumentResponse.StatusCode != System.Net.HttpStatusCode.OK)
+         {
+            //handle according to established exception policy
+            throw (new CreateDocumentRelationshipException(createDocumentResponse));
+         }
+
+         return await createDocumentResponse.Content.ReadFromJsonAsync<DocumentCreationResponse<DocumentRelationshipCreated>>();
+
+      }
+
+      public string CreateJsonRelationshipPayload(string _parentId, IList<string> _documentidList)
+      {
+         DocumentRelationshipCreateData documentRelationshipCreateData = new DocumentRelationshipCreateData();
+
+         foreach (string documentId in _documentidList)
+         {
+            DocumentRelationshipCreate documentRelationshipCreate = new DocumentRelationshipCreate();
+
+            documentRelationshipCreate.id = documentId;
+
+            documentRelationshipCreate.relateddata.parents.Add(new PhysicalId(_parentId));
+
+            documentRelationshipCreateData.data.Add(documentRelationshipCreate);
+         }
+
+         return JsonSerializer.Serialize(documentRelationshipCreateData);
+      }
+      #endregion
 
       public async Task<DocumentResponse<DocumentCreated>> CreateDocument(string _title, string _description, string _fileLocalPath, string _collabSpace = null, string _documentType = null)
       {

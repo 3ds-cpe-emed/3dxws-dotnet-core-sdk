@@ -142,5 +142,51 @@ namespace ds.enovia.dseng.tests
          Assert.AreEqual(1, specDocs0.data.Count);
 
       }
+
+
+      //#43 - Create Document Attachment link with an existing Document
+      [TestCase("VPLMProjectLeader.Company Name.AAA27 Personal", "C437FF982377000063358D0600000C23", "DFD6F08514170000631B2F20000CBA1A", "4F85D3B39E7D000063186F8900006EEA")]
+      public async Task AttachDocuments(string _securityContext, string _parentId, string _doc1, string _doc2)
+      {
+         //Authenticate
+         IPassportAuthentication passport = await Authenticate();
+
+         //Instantiate the Document Service wrapper
+         DocumentService documentService = new DocumentService(m_enoviaUrl, passport);
+
+         documentService.SecurityContext = _securityContext;
+         documentService.Tenant = m_tenant;
+
+         DocumentCreationResponse<DocumentRelationshipCreated> response = await documentService.CreateAttachmentRelationship(_parentId, new List<string>() { _doc1, _doc2 });
+
+         Assert.IsNotNull(response);
+
+         Assert.IsTrue(response.success);
+
+      }
+
+      //#42 - Create Document Specification link with existing document
+      [TestCase("VPLMProjectLeader.Company Name.AAA27 Personal", "C437FF982377000063358D0600000C23", "41DF2E16046E0000627B8E86000EE562", "795A0F6C8258000061EE6364000AB150")]
+      public async Task AddSpecificationDocuments(string _securityContext, string _parentId, string _doc1, string _doc2)
+      {
+         //Authenticate
+         //Authenticate
+         IPassportAuthentication passport = await Authenticate();
+
+         //Instantiate the Document Service wrapper
+         DocumentService documentService = new DocumentService(m_enoviaUrl, passport);
+
+         documentService.SecurityContext = _securityContext;
+         documentService.Tenant = m_tenant;
+
+         DocumentCreationResponse<DocumentRelationshipCreated> response = await documentService.CreateSpecificationRelationship(_parentId, new List<string>() { _doc1, _doc2 });
+
+         Assert.IsNotNull(response);
+
+         Assert.IsTrue(response.success);
+
+
+      }
+
    }
 }
