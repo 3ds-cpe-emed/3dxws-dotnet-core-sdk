@@ -4,6 +4,7 @@ using ds.enovia.common.collection;
 using ds.enovia.common.search;
 using ds.enovia.dseng.model;
 using ds.enovia.dseng.service;
+using ds.enovia.dslc.exception;
 using ds.enovia.dslc.model;
 using ds.enovia.dslc.service;
 using ds.enovia.model;
@@ -126,5 +127,65 @@ namespace ds.enovia.dslc.tests
             Assert.IsNotNull(versionGraph);
             #endregion
         }
-    }
+
+
+      [TestCase("VPLMAdmin.Company Name.Default", "863FB0B4307E495BB6543BBB90163077", "35B0B3DB487B00005F0388A60006EEB9", "Company Name", "AAA27 Personal", "eifuseremed")]
+      //[TestCase("VPLMAdmin.Company Name.Default", "prd-R1132100982379-00355456", "A.1")]
+      public async Task Exercise_TransferOwnership(string _securityContext, string _id1, string _id2, string _organization, string _collabSpace, string _newOwnerId)
+      {
+         #region Arrange
+         //Authenticate
+         IPassportAuthentication passport = await Authenticate();
+
+         OwnershipTransferData ownershipTransferData = new OwnershipTransferData();
+         ownershipTransferData.collabspace = _collabSpace;
+         ownershipTransferData.organization = _organization;
+         ownershipTransferData.owner = _newOwnerId;
+
+         ownershipTransferData.data.Add(new PhysicalId(_id1));
+         ownershipTransferData.data.Add(new PhysicalId(_id2));
+         
+         CollaborativeLifecycleService lifecycleService = new CollaborativeLifecycleService(m_enoviaUrl, passport);
+
+         lifecycleService.SecurityContext = _securityContext;
+         lifecycleService.Tenant = m_tenant;
+         #endregion
+
+         #region Act
+         //Call Collaborative Lifecycle Services Get Graph
+         try
+         {
+            IOwnershipTransferResponse ownershipTransferResponse = await lifecycleService.TransferOwnership(ownershipTransferData);
+
+            Assert.IsNotNull(ownershipTransferResponse);
+
+            Assert.IsNotNull(ownershipTransferResponse.results);
+            Assert.AreEqual(2, ownershipTransferResponse.results.Count);
+
+            Assert.AreEqual(200, ownershipTransferResponse.results[0].status);
+            Assert.AreEqual(200, ownershipTransferResponse.results[1].status);
+
+            Assert.AreEqual(_newOwnerId, ownershipTransferResponse.results[0].owner);
+            Assert.AreEqual(_newOwnerId, ownershipTransferResponse.results[1].owner);
+
+            Assert.AreEqual(_organization, ownershipTransferResponse.results[0].organization);
+            Assert.AreEqual(_organization, ownershipTransferResponse.results[1].organization);
+
+            Assert.AreEqual(_collabSpace, ownershipTransferResponse.results[0].collabspace);
+            Assert.AreEqual(_collabSpace, ownershipTransferResponse.results[1].collabspace);
+
+         }
+         catch (TransferOwnershipException _ex)
+         {
+            Assert.Fail(await _ex.GetErrorMessage());
+         }
+         catch (Exception _ex)
+         {
+            Assert.Fail(_ex.Message);
+         }
+
+         #endregion
+
+      }
+   }
 }
