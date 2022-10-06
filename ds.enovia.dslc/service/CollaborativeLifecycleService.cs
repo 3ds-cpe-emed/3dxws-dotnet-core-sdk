@@ -15,11 +15,12 @@
 //------------------------------------------------------------------------------------------------------------------------------------
 
 using ds.authentication;
+
 using ds.enovia.dslc.exception;
 using ds.enovia.dslc.model;
+using ds.enovia.dslc.serialization;
 using ds.enovia.service;
-using System;
-using System.Collections.Generic;
+
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -29,9 +30,10 @@ namespace ds.enovia.dslc.service
 {
     public class CollaborativeLifecycleService : EnoviaBaseService
     {
-        private const string BASE_RESOURCE   = "/resources/v1/modeler/dslc";
-        private const string VERSION_CREATE  = "/version/create";
-        private const string VERSION_GRAPH   = "/version/getGraph";
+        private const string BASE_RESOURCE      = "/resources/v1/modeler/dslc";
+        private const string VERSION_CREATE     = "/version/create";
+        private const string VERSION_GRAPH      = "/version/getGraph";
+        private const string TRANSFER_OWNERSHIP = "/ownership/transfer";
 
         public string GetBaseResource()
         {
@@ -60,6 +62,33 @@ namespace ds.enovia.dslc.service
 
             return await requestResponse.Content.ReadFromJsonAsync<VersionGraph>();
 
-        }
-    }
+         }
+
+         public async Task<IOwnershipTransferResponse> TransferOwnership(IOwnershipTransferData _ownershipTransferData)
+         {
+            string getTransferOwnershipResourceUrl = string.Format("{0}{1}", GetBaseResource(), TRANSFER_OWNERSHIP);
+
+            string bodyTransferOwnership = JsonSerializer.Serialize<object>(_ownershipTransferData);
+
+            HttpResponseMessage requestResponse = await PostAsync(getTransferOwnershipResourceUrl, _body: bodyTransferOwnership);
+
+            if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+               //handle according to established exception policy
+               throw (new TransferOwnershipException(requestResponse));
+            }
+
+            // Deserialize with interface implementation classes to be used during serial/deserialization defined in options through custom type converter
+
+            JsonSerializerOptions options = new JsonSerializerOptions {
+                  Converters =
+                  {
+                      new TypeMappingConverter<IOwnershipTransferStatus, OwnershipTransferStatus>(),
+                      new TypeMappingConverter<IOwnershipTransferResponse, OwnershipTransferResponse>()
+                  }
+            };
+         
+            return await requestResponse.Content.ReadFromJsonAsync<IOwnershipTransferResponse>(options);
+         }
+   }
 }

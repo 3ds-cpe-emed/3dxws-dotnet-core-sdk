@@ -6,13 +6,13 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Authors>Dassault Systèmes - EMED CPE</Authors>
     <Company>Dassault Systèmes</Company>
-    <Description>3DEXPERIENCE Dotnet Core SDK for Enovia (shared base) web services</Description>
+    <Description>3DEXPERIENCE Dotnet Core SDK for Enovia Collaboration Lifecycle web services</Description>
     <Copyright>Copyright ©  2021</Copyright>
     <PackageLicenseFile>MITLicense.md</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</PackageProjectUrl>
     <RepositoryUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</RepositoryUrl>
-    <PackageReleaseNotes>fix: package information</PackageReleaseNotes>
-    <Version>1.0.1</Version>
+    <PackageReleaseNotes>add #45: transfer ownership</PackageReleaseNotes>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
