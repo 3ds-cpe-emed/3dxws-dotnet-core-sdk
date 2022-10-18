@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Dassault Systèmes - EMED CPE</Authors>
-    <Version>2.0.4</Version>
+    <Version>2.0.5</Version>
     <Company>Dassault Systèmes</Company>
     <Description>3DEXPERIENCE Dotnet Core SDK for Enovia (base) web services</Description>
     <Copyright>Copyright ©  2021</Copyright>
@@ -11,7 +11,7 @@
     <PackageProjectUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>fix: package information</PackageReleaseNotes>
+    <PackageReleaseNotes>fix: #47 Dictionary exception in GetCurrentUserInfoAsync()</PackageReleaseNotes>
     <PackageTags>3DEXPERIENCE</PackageTags>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ds.enovia.snk</AssemblyOriginatorKeyFile>
