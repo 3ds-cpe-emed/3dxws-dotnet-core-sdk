@@ -67,7 +67,24 @@ namespace ds.enovia.service
             }
             if (IncludePreferredCredentials)
             {
-                queryParameters.Add("select", "preferredcredentials");
+            // #47 - Dictionary exception in GetCurrentUserInfoAsync()
+            // quick fix - a better solution could be to use a IList<string>
+            // in the value however this has a bigger impact; due to legacy reasons this is expected
+            // to be of type IDictionary<string, string> instead of IDictionary<string, object>.
+
+               if (!queryParameters.ContainsKey("select")) {
+                  queryParameters.Add("select", "preferredcredentials");
+               }
+               else {
+                  queryParameters["select"] += "&select=preferredcredentials";
+               }
+            }
+
+            // add: include also names in the case credentials or collabspaces are required
+            // fields :  https://media.3ds.com/support/documentation/developer/Cloud/en/DSDoc.htm?show=CAAi3DXPnOWS/CAAi3DXPnOWSQrPersonMe.htm
+
+            if (IncludePreferredCredentials || IncludeCollaborativeSpaces) {
+               queryParameters["select"] += "&select=firstname&select=lastname&select=email&select=address&select=phone&select=isactive&select=company&select=fullAddress";
             }
 
             HttpResponseMessage requestResponse = await this.GetAsync(RESOURCE_EP, queryParameters);
