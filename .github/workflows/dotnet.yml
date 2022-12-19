@@ -16,9 +16,9 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 3.1.x
     - name: Restore dependencies
@@ -30,6 +30,8 @@ jobs:
       
     - id: file_changes
       uses: jitterbit/get-changed-files@v1
+      with:
+        node-version: 16
 #    - name: List all modified files
 #      run: echo ${{ steps.file_changes.outputs.modified}}
       
