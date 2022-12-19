@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------------------------------------------------------------
-// Copyright 2021 Dassault Systèmes - CPE EMED
+// Copyright 2022 Dassault Systèmes - CPE EMED
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
 // files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify,
@@ -14,24 +14,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //------------------------------------------------------------------------------------------------------------------------------------
 
-using ds.enovia.common.collection;
+
 using ds.enovia.common.model;
 using System.Text.Json.Serialization;
 
 namespace ds.enovia.dsxcad.model
 {
-    public class xCADPart : Item
-    {
-        [JsonPropertyName("dsxcad:xCADAttributes")]
-        public DSXCadXCadAttributes xCADAttributes { get; set; }
+   public class xCADPartRelatedData
+   {
+      [JsonPropertyName("cadlinktype")]
+      public string CADLinkType { get; set; }
 
-        [JsonPropertyName("dsxcad:AuthoringFile")]
-        public AuthoringFile AuthoringFile { get; set; }
+      [JsonPropertyName("cestamp")]
+      public string CEStamp { get; set; }
 
-        [JsonPropertyName("dsxcad:VisualizationFile")]
-        public VisualizationFile VisualizationFile { get; set; }
-
-        [JsonPropertyName("relatedData")]
-        public ItemSet<xCADPartRelatedData> RelatedData { get; set; }
-   }
+      [JsonPropertyName("referencedObject")]
+      public BusinessObjectId ReferencedObject {get; set; }
+}
 }
