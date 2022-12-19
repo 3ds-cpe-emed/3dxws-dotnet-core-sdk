@@ -64,7 +64,27 @@ namespace ds.enovia.dsxcad.tests
             return passport;
         }
 
-        [TestCase("VPLMAdmin.Company Name.Default", "c:\\temp", "xcadmodel-R1132100982379-00000190", "A.1", 180)]
+      public async Task<IPassportAuthentication> AuthenticateOnPremise()
+      {
+         UserPassport passport = new UserPassport(m_passportUrl);
+
+         UserInfoRedirection userInfoRedirection = new UserInfoRedirection(m_enoviaUrl);
+         userInfoRedirection.Current = true;
+         userInfoRedirection.IncludeCollaborativeSpaces = true;
+         userInfoRedirection.IncludePreferredCredentials = true;
+
+         m_userInfo = await passport.CASLoginWithRedirection<UserInfo>(m_username, m_password, false, userInfoRedirection);
+
+         Assert.IsNotNull(m_userInfo);
+
+         StringAssert.AreEqualIgnoringCase(m_userInfo.name, m_username);
+
+         Assert.IsTrue(passport.IsCookieAuthenticated);
+
+         return passport;
+      }
+
+      [TestCase("VPLMAdmin.Company Name.Default", "c:\\temp", "xcadmodel-R1132100982379-00000190", "A.1", 180)]
         public async Task Download_XCADModelAuthoringFile(string _securityContext, string _downloadPath, string _cadfamilymodelName, string _cadfamilymodelRevision, int _timeout)
         {
             #region Arrange
@@ -362,6 +382,26 @@ namespace ds.enovia.dsxcad.tests
 
 
          Console.WriteLine($"A total of {searchReturnSet.Count} Parts have been returned.");
+
+      }
+
+
+      [TestCase("VPLMProjectLeader.Company Name.CS-PRS-4_vdemo299", "CS-PRS-4_vdemo299")]
+      public async Task GetPartItems(string _securityContext, string _collaborativeSpace)
+      {
+         //Authenticate
+         IPassportAuthentication passport = await AuthenticateOnPremise();
+
+         //SearchByFreeText query = new SearchByFreeText("([ds6w: modified] >= \"2022-09-24T09:12:50.7891897Z\" AND [ds6w: modified] <= \"2022-09-26T09:12:50.7891897Z\") AND ([ds6w: status]:(VPLM_SMB_Definition.FROZEN)) AND(project:\"AAA27 Personal\" OR project:\"ATG - SaaS Readiness\" OR project: \"CMU\")");
+         //SearchByCollaborativeSpace query = new SearchByCollaborativeSpace(_collaborativeSpace);
+
+         xCADPartService xcadService = new xCADPartService(m_enoviaUrl, passport);
+         xcadService.SecurityContext = _securityContext;
+         xcadService.Tenant = m_tenant;
+
+         xCADPart part = await xcadService.GetXCADPart("7091BF56189000006399F231001C977D", xCADPartDetails.Details);
+
+         //Console.WriteLine($"A total of {searchReturnSet.Count} Parts have been returned.");
 
       }
    }
