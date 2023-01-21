@@ -3,6 +3,7 @@ using ds.authentication.redirection;
 using ds.enovia.common.collection;
 using ds.enovia.common.model;
 using ds.enovia.common.search;
+using ds.enovia.dsxcad.exception;
 using ds.enovia.dsxcad.model;
 using ds.enovia.dsxcad.service;
 using ds.enovia.model;
@@ -63,6 +64,17 @@ namespace ds.enovia.dsxcad.tests
 
             return passport;
         }
+
+      public string GetDefaultSecurityContext(enovia.model.UserInfo _userInfo)
+      {
+         SecurityContext __securityContext = new SecurityContext();
+
+         __securityContext.collabspace  = _userInfo.preferredcredentials.collabspace;
+         __securityContext.organization = _userInfo.preferredcredentials.organization;
+         __securityContext.role         = _userInfo.preferredcredentials.role;
+
+         return __securityContext.ToString();
+      }
 
       public async Task<IPassportAuthentication> AuthenticateOnPremise()
       {
@@ -297,9 +309,6 @@ namespace ds.enovia.dsxcad.tests
          Assert.AreEqual(id3Response.totalItems, 0);
       }
 
-
-
-
       [TestCase("VPLMAdmin.Company Name.Default", "ATG - SaaS Readiness")]
       public async Task GetAndLocatexCADFamilyMembers(string _securityContext, string _collaborativeSpace)
       {
@@ -361,7 +370,6 @@ namespace ds.enovia.dsxcad.tests
 
       }
 
-
       [TestCase("VPLMAdmin.Company Name.Default", "ATG - SaaS Readiness")]
       public async Task SearchPartItems(string _securityContext, string _collaborativeSpace)
       {
@@ -404,5 +412,50 @@ namespace ds.enovia.dsxcad.tests
          //Console.WriteLine($"A total of {searchReturnSet.Count} Parts have been returned.");
 
       }
+
+      //Euromed tenant
+      [TestCase( new object[] { "34149A024463000063C0BF05001C04F9", "22E1AA12E91B000063C7F85A001E5883" } )]
+      //issue #52 - Extend CAD Family Locate with multiple object input 
+      public async Task GetAndLocateMultiplexCADFamilyMembers(params string[] _partIdList)
+      {
+         //Authenticate
+         IPassportAuthentication passport = await Authenticate();
+
+         xCADFamilyRepresentationService xcadService = new xCADFamilyRepresentationService(m_enoviaUrl, passport);
+         xcadService.SecurityContext = GetDefaultSecurityContext(m_userInfo);
+         xcadService.Tenant = m_tenant;
+
+         IList<string> noMemberCADFamilyList = new List<string>();
+
+         IList<BusinessObjectIdentifier> businessObjectIds = new List<BusinessObjectIdentifier>();
+
+         string errorMessage = "";
+         MemberSet<xCADFamilyRepresentationReference> refIdResponse = null;
+
+         foreach (string partId in _partIdList)
+         {
+            BusinessObjectIdentifier newBusinessObjectId = new BusinessObjectIdentifier();
+            newBusinessObjectId.identifier = partId;
+            newBusinessObjectId.source     = "$3DSpace";
+            newBusinessObjectId.type       = "VPMReference";
+            newBusinessObjectId.relativePath = "resource/v1/dsxcad/dsxcad:Part/" + partId;
+
+            businessObjectIds.Add(newBusinessObjectId);
+         }
+         try
+         {
+            refIdResponse = await xcadService.Locate(businessObjectIds);
+         }
+         catch (LocateXCADFamilyException _ex)
+         {
+            errorMessage = await _ex.GetErrorMessage();
+         }
+
+         Assert.IsNotNull(refIdResponse);
+         Assert.IsNotNull(refIdResponse.member);
+         Assert.AreEqual(refIdResponse.member.Count, 2);
+
+      }
+
    }
 }
