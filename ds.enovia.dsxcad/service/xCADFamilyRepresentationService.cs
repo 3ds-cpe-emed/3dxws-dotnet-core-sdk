@@ -133,7 +133,13 @@ namespace ds.enovia.dsxcad.service
 
          inputColl.Add(_id);
 
-         string inputMessage = JsonSerializer.Serialize(inputColl);
+         return await Locate(inputColl);
+
+      }
+
+      public async Task<MemberSet<xCADFamilyRepresentationReference>> Locate(IList<BusinessObjectIdentifier> _idList)
+      {
+         string inputMessage = JsonSerializer.Serialize(_idList);
 
          // - call web service ---
 
