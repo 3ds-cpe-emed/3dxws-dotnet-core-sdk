@@ -22,7 +22,8 @@ namespace ds.enovia.dseng.model
 {
     public class EngineeringItem : Item
     {
-       
+        public string isManufacturable { get; set; }
+
         [JsonPropertyName("dseng:EnterpriseReference")]
         public EnterpriseReference enterpriseReference { get; set; }
 
