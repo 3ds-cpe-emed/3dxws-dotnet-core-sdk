@@ -27,6 +27,7 @@ namespace ds.enovia.dseng.model
             this.title = _item.title;
             this.description = _item.description;
             this.cestamp = _item.cestamp;
+            this.isManufacturable = _item.isManufacturable;
             this.enterpriseAttributes = _item.enterpriseAttributes;
             this.enterpriseReference = _item.enterpriseReference;
         }
@@ -34,6 +35,7 @@ namespace ds.enovia.dseng.model
         public string title { get; set; }
         public string description { get; set; }
         public string cestamp { get; set; }
+        public string isManufacturable { get; set; }
 
         [JsonPropertyName("dseng:EnterpriseReference")]
         public EnterpriseReference enterpriseReference { get; set; }
