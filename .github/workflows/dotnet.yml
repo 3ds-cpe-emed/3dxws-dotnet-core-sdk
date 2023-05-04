@@ -30,11 +30,11 @@ jobs:
       
     - id: file_changes      
       uses: jitterbit/get-changed-files@v1
-      with:
+      # with:
         # Format of the steps output context.
         # Can be 'space-delimited', 'csv', or 'json'.
         # Default: 'space-delimited'
-        format: ''
+        # format: ''
 #    - name: List all modified files
 #      run: echo ${{ steps.file_changes.outputs.modified}}
       
