@@ -15,7 +15,7 @@
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</PackageProjectUrl>
     <PackageTags>3DEXPERIENCE</PackageTags>
-    <PackageReleaseNotes>add: #54 Support Engineering Item isManufacturable</PackageReleaseNotes>
+    <PackageReleaseNotes>add: #54 Engineering Item isManufacturable attribute</PackageReleaseNotes>
     <PackageLicenseFile>MITLicense.md</PackageLicenseFile>
     <RepositoryUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</RepositoryUrl>
   </PropertyGroup>
