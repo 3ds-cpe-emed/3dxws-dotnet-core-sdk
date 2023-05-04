@@ -28,10 +28,13 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
       
-    - id: file_changes
+    - id: file_changes      
       uses: jitterbit/get-changed-files@v1
       with:
-        node-version: 16
+        # Format of the steps output context.
+        # Can be 'space-delimited', 'csv', or 'json'.
+        # Default: 'space-delimited'
+        format: ''
 #    - name: List all modified files
 #      run: echo ${{ steps.file_changes.outputs.modified}}
       
