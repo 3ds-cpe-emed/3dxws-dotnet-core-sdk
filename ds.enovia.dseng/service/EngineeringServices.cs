@@ -449,12 +449,36 @@ namespace ds.enovia.dseng.service
             }
 
             return await requestResponse.Content.ReadFromJsonAsync<ItemSet<EngineeringInstanceEffectivityHasChange>>();            
-        }       
-        #endregion
+        }
 
-        #region  dscfg:Configured
-        //This extension gets the Enabled Criteria and Configuration Contexts of Configured object
-        public async Task<EngineeringItemConfigurationDetails> GetConfigurationDetails(string _itemId)
+      public async Task<NlsLabeledItemSet<EngineeringItem>> CreateEngineeringInstances(string _engItemId, EngineeringInstancesCreate _instances)
+      {
+         string createEngineeringInstancesEndpoint = string.Format($"{GetBaseResource()}/{_engItemId}{ENGINEERING_INSTANCES}");
+
+         //EngineeringSearchMask engItemMask = EngineeringSearchMask.Default;
+
+         // masks
+         Dictionary<string, string> queryParams = new Dictionary<string, string>();
+         queryParams.Add("$mask", "dskern: Mask.Default");
+
+         string engInstanceSetPayload = JsonSerializer.Serialize(_instances);
+         HttpResponseMessage requestResponse = await PostAsync(createEngineeringInstancesEndpoint, _body: engInstanceSetPayload);
+
+         if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
+         {
+            //handle according to established exception policy
+            throw (new CreateEngineeringInstancesException(requestResponse));
+         }
+
+         return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<EngineeringItem>>();
+
+      }
+
+      #endregion
+
+      #region  dscfg:Configured
+      //This extension gets the Enabled Criteria and Configuration Contexts of Configured object
+      public async Task<EngineeringItemConfigurationDetails> GetConfigurationDetails(string _itemId)
         {
             string getConfigurationDetails = string.Format("{0}/{1}{2}", GetBaseResource(), _itemId, CONFIGURED);
 
