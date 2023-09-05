@@ -1,12 +1,14 @@
 using ds.authentication;
 using ds.authentication.redirection;
 using ds.enovia.common.collection;
+using ds.enovia.common.search;
 using ds.enovia.dseng.exception;
 using ds.enovia.dseng.model;
 using ds.enovia.dseng.service;
 using ds.enovia.model;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ds.enovia.dseng.tests
@@ -59,6 +61,11 @@ namespace ds.enovia.dseng.tests
          m_tenant = Environment.GetEnvironmentVariable(DS3DXWS_AUTH_TENANT, EnvironmentVariableTarget.User); // e.g. R1132100982379
       }
 
+      private string CurrentUserPreferredCredentials()
+      {
+         return m_userInfo.preferredcredentials.ToString();
+      }
+
       [TestCase("VPLMProjectLeader.Company Name.AAA27 Personal", "Engineering Item Title", "Engineering Item Description")]
       public async Task Create_EngineeringItem(string _securityContext, string _title, string _description)
       {
@@ -94,7 +101,6 @@ namespace ds.enovia.dseng.tests
          #endregion
       }
 
-
       [TestCase("VPLMProjectLeader.Company Name.AAA27 Personal", "A437358E00006E50621D045E0000F2A8")]
       public async Task Get_EngineeringItem_Usage(string _securityContext, string _engineeringItemId)
       {
@@ -121,7 +127,6 @@ namespace ds.enovia.dseng.tests
 
          #endregion
       }
-
 
       [TestCase("VPLMProjectLeader.Company Name.AAA27 Personal", "221CD96C0A1B000064C928600012881F", "221CD96C0A1B000064C970100016855F")]
       public async Task Create_EngineeringInstances(string _securityContext, string _sourceItemId, string _targetItemId)
@@ -215,6 +220,145 @@ namespace ds.enovia.dseng.tests
 
 
          #endregion
+      }
+
+      #region Bulk Fetch Tests
+      [TestCase("AAA27")]
+      public async Task Get_BulkFetch(string _searchText)
+      {
+         #region Arrange
+
+         //Authenticate
+         IPassportAuthentication passport = await Authenticate();
+
+         //Instantiate the Engineering Service wrapper
+         EngineeringServices engineeringServices = new EngineeringServices(m_enoviaUrl, passport);
+         engineeringServices.SecurityContext = CurrentUserPreferredCredentials();
+         engineeringServices.Tenant = m_tenant;
+
+         #endregion
+
+         #region Act - Get Engineering Item Common attributes
+         SearchByFreeText searchByFreeText = new SearchByFreeText(_searchText);
+
+         List<EngineeringItem> allResults = BulkFetchUtils<EngineeringItem>.AsList(await engineeringServices.SearchAll(searchByFreeText));
+         
+         List<List<string>> bulkFetchLists = BulkFetchUtils<EngineeringItem>.GetSplitIds(allResults);
+         
+         try
+         {
+            for (int i = 0; i < bulkFetchLists.Count; i++)
+            {
+               IList<EngineeringItem> resultAsDefaultMask = await engineeringServices.BulkFetchAsDefaultMask(bulkFetchLists[i].ToArray());
+
+               Assert.AreEqual(bulkFetchLists[i].Count, resultAsDefaultMask.Count);
+
+               IList<EngineeringItemCommon> resultAsCommonMask = await engineeringServices.BulkFetchAsCommonMask(bulkFetchLists[i].ToArray());
+
+               Assert.AreEqual(bulkFetchLists[i].Count, resultAsCommonMask.Count);
+
+               IList<EngineeringItem> resultAsDetailMask = await engineeringServices.BulkFetchAsDetailMask(bulkFetchLists[i].ToArray());
+
+               Assert.AreEqual(bulkFetchLists[i].Count, resultAsDetailMask.Count);
+            }
+         }
+         catch (BulkFetchException _ex)
+         {
+            Assert.Fail(await _ex.GetErrorMessage());
+         }
+         catch (Exception _ex)
+         {
+            Assert.Fail(_ex.Message);
+         }
+         #endregion
+
+         #region Assert
+
+         #endregion
+      }
+
+      #endregion
+
+      [TestCase("5BAFBB4D5EAE4772ACE791986F12B668")]
+      public async Task Get_EngineeringItem(string _engineeringItemId)
+      {
+         #region Arrange
+
+         //Authenticate
+         IPassportAuthentication passport = await Authenticate();
+
+         //Instantiate the Engineering Service wrapper
+         EngineeringServices engineeringServices = new EngineeringServices(m_enoviaUrl, passport);
+         engineeringServices.SecurityContext = CurrentUserPreferredCredentials();
+         engineeringServices.Tenant = m_tenant;
+
+         #endregion
+
+         #region Act - Get Engineering Item Common attributes
+
+         EngineeringItem engItem = await engineeringServices.GetEngineeringItemDetails(_engineeringItemId);
+         #endregion
+
+         #region Assert
+         Assert.IsNotNull(engItem);
+         #endregion
+      }
+
+      [TestCase("5BAFBB4D5EAE4772ACE791986F12B668")]
+      public async Task Modify_EngineeringItem(string _engineeringItemId)
+      {
+         #region Arrange
+
+         //Authenticate
+         IPassportAuthentication passport = await Authenticate();
+
+         //Instantiate the Engineering Service wrapper
+         EngineeringServices engineeringServices = new EngineeringServices(m_enoviaUrl, passport);
+         engineeringServices.SecurityContext = CurrentUserPreferredCredentials();
+         engineeringServices.Tenant = m_tenant;
+
+         #endregion
+
+         #region Act - Get Engineering Item Common attributes
+
+         try
+         {
+            EngineeringItem engItem = await engineeringServices.GetEngineeringItemDetails(_engineeringItemId);
+
+            engItem.isManufacturable = GetOppositeValue(engItem.isManufacturable);
+
+            EngineeringItem engItemUpdate1 = await engineeringServices.UpdateEngineeringItem(engItem, true);
+
+            engItemUpdate1.isManufacturable = GetOppositeValue(engItemUpdate1.isManufacturable);
+
+            EngineeringItem engItemUpdate2 = await engineeringServices.UpdateEngineeringItem(engItemUpdate1, true);
+
+            #region Assert
+            Assert.That(engItemUpdate1.isManufacturable.Equals(engItemUpdate2.isManufacturable, StringComparison.InvariantCultureIgnoreCase));
+            #endregion
+         }
+         catch (EngineeringResponseException _ex)
+         {
+            Assert.Fail (await _ex.GetErrorMessage());
+         }
+         #endregion
+      }
+
+      private string GetOppositeValue(string _value)
+      {
+         if (_value?.Equals(false.ToString(), StringComparison.InvariantCultureIgnoreCase) != false)
+         {
+            return FormatBoolean(true);
+         }
+         else
+         {
+            return FormatBoolean(false);
+         }
+      }
+
+      private string FormatBoolean(bool _bool)
+      {
+         return _bool.ToString().ToUpperInvariant();
       }
    }
 }
