@@ -14,26 +14,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //------------------------------------------------------------------------------------------------------------------------------------
 
-using ds.enovia.common.model;
-using ds.enovia.dseng.utils;
-using System.Collections.Generic;
+using System;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ds.enovia.dseng.model
+namespace ds.enovia.dseng.utils
 {
-    public class EngineeringItem : Item
-    {
-        // Bulk Fetch response schema for EngMask.Details returns a boolean (SR01080789-01)
-        // Using a custom reader to workaround the issue.
-        [JsonConverter(typeof(IsManufacturableConverter))]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string isManufacturable { get; set; }
+   // Bulk Fetch response schema for EngMask.Details returns a boolean (SR01080789-01)
+   // Using a custom reader to workaround the issue.
+   public class IsManufacturableConverter : JsonConverter<string>
+   {
+      public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+      {
+         if (reader.TokenType == JsonTokenType.False) return FormatBoolean(false);
 
-        [JsonPropertyName("dseng:EnterpriseReference")]
-        public EnterpriseReference enterpriseReference { get; set; }
+         if (reader.TokenType == JsonTokenType.True) return FormatBoolean(true);
 
-        [JsonPropertyName("dseno:EnterpriseAttributes")]
-        public Dictionary<string, object> enterpriseAttributes { get; set; }
-      
-    }
+         if (reader.TokenType == JsonTokenType.String) return reader.GetString();
+
+         throw new JsonException($"Unexpected type received {reader.TokenType}");
+      }
+
+      private string FormatBoolean(bool _bool)
+      {
+         return _bool.ToString().ToUpperInvariant();
+      }
+
+      public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options)
+      {
+         throw new NotImplementedException();
+      }
+   }
 }
