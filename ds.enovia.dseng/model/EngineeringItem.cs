@@ -15,6 +15,7 @@
 //------------------------------------------------------------------------------------------------------------------------------------
 
 using ds.enovia.common.model;
+using ds.enovia.dseng.utils;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -22,6 +23,10 @@ namespace ds.enovia.dseng.model
 {
     public class EngineeringItem : Item
     {
+        // Bulk Fetch response schema for EngMask.Details returns a boolean (SR01080789-01)
+        // Using a custom reader to workaround the issue.
+        [JsonConverter(typeof(IsManufacturableConverter))]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string isManufacturable { get; set; }
 
         [JsonPropertyName("dseng:EnterpriseReference")]

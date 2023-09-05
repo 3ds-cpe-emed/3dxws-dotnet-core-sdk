@@ -191,6 +191,63 @@ namespace ds.enovia.dseng.service
          return null;
       }
 
+      #region Bulk Fetch
+      public async Task<IList<EngineeringItem>> BulkFetchAsDefaultMask(string[] _engineeringItemIds, EngineeringItemFields _engItemFields = null)
+      {
+         Dictionary<string, string> queryParams = new Dictionary<string, string>();
+         queryParams.Add("$mask", "dskern:Mask.Default");
+         if (_engItemFields != null)
+         {
+            queryParams.Add("$fields", _engItemFields.ToString());
+         }
+
+         return await BulkFetch<EngineeringItem>(_engineeringItemIds, queryParams);
+      }
+
+      public async Task<IList<EngineeringItemCommon>> BulkFetchAsCommonMask(string[] _engineeringItemIds, EngineeringItemFields _engItemFields = null)
+      {
+         Dictionary<string, string> queryParams = new Dictionary<string, string>();
+         queryParams.Add("$mask", "dsmveng:EngItemMask.Common");
+         if (_engItemFields != null)
+         {
+            queryParams.Add("$fields", _engItemFields.ToString());
+         }
+
+         return await BulkFetch<EngineeringItemCommon>(_engineeringItemIds, queryParams);
+      }
+
+      public async Task<IList<EngineeringItem>> BulkFetchAsDetailMask(string[] _engineeringItemIds, EngineeringItemFields _engItemFields = null)
+      {
+         Dictionary<string, string> queryParams = new Dictionary<string, string>();
+         queryParams.Add("$mask", "dsmveng:EngItemMask.Details");
+         if (_engItemFields != null)
+         {
+            queryParams.Add("$fields", _engItemFields.ToString());
+         }
+
+         return await BulkFetch<EngineeringItem>(_engineeringItemIds, queryParams);
+      }
+
+      private async Task<IList<T>> BulkFetch<T>(string[] _engineeringItemIds, Dictionary<string, string> _queryParams = null) where T : Item
+      {
+         string bulkFetchResource = string.Format("{0}/bulkfetch", GetBaseResource());
+
+         string payload = JsonSerializer.Serialize(_engineeringItemIds);
+
+         HttpResponseMessage requestResponse = await PostAsync(bulkFetchResource, _queryParams, null, payload);
+
+         if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
+         {
+            //handle according to established exception policy
+            throw (new BulkFetchException(requestResponse));
+         }
+
+         NlsLabeledItemSet<T> responseContent = await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<T>>();
+
+         return responseContent.member;
+      }
+      #endregion
+
       public async Task<EngineeringItem> PatchEngineeringItemAttributes(string _id, EngineeringItemPatchAttributes _atts, bool _details = true)
         {
             string patchEngineeringItemEndpoint = string.Format("{0}/{1}", GetBaseResource(), _id);
@@ -221,7 +278,7 @@ namespace ds.enovia.dseng.service
             return null;
         }
 
-        public async Task<EngineeringItem> UpdateEngineeringItem(EngineeringItem _item)
+        public async Task<EngineeringItem> UpdateEngineeringItem(EngineeringItem _item, bool _details = false)
         {
             string patchEngineeringItemEndpoint = string.Format("{0}/{1}", GetBaseResource(), _item.id);
 
@@ -237,7 +294,13 @@ namespace ds.enovia.dseng.service
 
             string messageBody = JsonSerializer.Serialize(payload, options);
 
-            HttpResponseMessage requestResponse = await PatchAsync(patchEngineeringItemEndpoint, null, null, messageBody);
+            Dictionary<string, string> queryParams = null;
+            if (_details)
+            {
+               queryParams = new Dictionary<string, string> { { "$mask", "dsmveng:EngItemMask.Details" } };
+            }
+
+            HttpResponseMessage requestResponse = await PatchAsync(patchEngineeringItemEndpoint, queryParams, null, messageBody);
 
             if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
             {

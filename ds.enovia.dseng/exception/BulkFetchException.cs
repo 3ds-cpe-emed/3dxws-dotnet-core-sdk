@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------------------------------------------------------------
-// Copyright 2020 Dassault Systèmes - CPE EMED
+// Copyright 2021 Dassault Systèmes - CPE EMED
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
 // files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify,
@@ -13,15 +13,15 @@
 // BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //------------------------------------------------------------------------------------------------------------------------------------
+using ds.enovia.common.exception;
+using System.Net.Http;
 
-namespace ds.enovia.dseng.model
+namespace ds.enovia.dseng.exception
 {
-    public class EnterpriseReference : EnterpriseReferenceCreate
-    {
-        public EnterpriseReference() { }
-
-        public string cestamp { get; set; }
-
-        public bool IsEmpty { get { return (cestamp == null) || (partNumber == null) || partNumber.Equals(string.Empty); }}
-    }
+   public class BulkFetchException : ResponseException
+   {
+      public BulkFetchException(HttpResponseMessage _response) : base(_response)
+      {
+      }
+   }
 }

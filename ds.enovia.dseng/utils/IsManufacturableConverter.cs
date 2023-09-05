@@ -14,14 +14,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //------------------------------------------------------------------------------------------------------------------------------------
 
-namespace ds.enovia.dseng.model
+using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace ds.enovia.dseng.utils
 {
-    public class EnterpriseReference : EnterpriseReferenceCreate
-    {
-        public EnterpriseReference() { }
+   // Bulk Fetch response schema for EngMask.Details returns a boolean (SR01080789-01)
+   // Using a custom reader to workaround the issue.
+   public class IsManufacturableConverter : JsonConverter<string>
+   {
+      public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+      {
+         if (reader.TokenType == JsonTokenType.False) return FormatBoolean(false);
 
-        public string cestamp { get; set; }
+         if (reader.TokenType == JsonTokenType.True) return FormatBoolean(true);
 
-        public bool IsEmpty { get { return (cestamp == null) || (partNumber == null) || partNumber.Equals(string.Empty); }}
-    }
+         if (reader.TokenType == JsonTokenType.String) return reader.GetString();
+
+         throw new JsonException($"Unexpected type received {reader.TokenType}");
+      }
+
+      private string FormatBoolean(bool _bool)
+      {
+         return _bool.ToString().ToUpperInvariant();
+      }
+
+      public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options)
+      {
+         throw new NotImplementedException();
+      }
+   }
 }
