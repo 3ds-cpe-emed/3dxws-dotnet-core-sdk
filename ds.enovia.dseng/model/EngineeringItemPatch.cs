@@ -29,7 +29,11 @@ namespace ds.enovia.dseng.model
             this.cestamp = _item.cestamp;
             this.isManufacturable = _item.isManufacturable;
             this.enterpriseAttributes = _item.enterpriseAttributes;
-            this.enterpriseReference = _item.enterpriseReference;
+
+            if ((_item.enterpriseReference?.IsEmpty == false))
+            {
+               enterpriseReference = _item.enterpriseReference;
+            }
         }
 
         public string title { get; set; }

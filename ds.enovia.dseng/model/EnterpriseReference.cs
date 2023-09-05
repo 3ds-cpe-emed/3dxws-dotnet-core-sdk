@@ -22,5 +22,6 @@ namespace ds.enovia.dseng.model
 
         public string cestamp { get; set; }
 
+        public bool IsEmpty { get { return (cestamp == null) || (partNumber == null) || partNumber.Equals(string.Empty); }}
     }
 }
