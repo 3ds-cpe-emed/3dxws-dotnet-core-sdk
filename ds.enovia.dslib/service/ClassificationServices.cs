@@ -16,12 +16,14 @@
 
 using ds.authentication;
 using ds.enovia.common.collection;
+using ds.enovia.common.model;
 using ds.enovia.dslib.exception;
 using ds.enovia.dslib.model;
 using ds.enovia.service;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ds.enovia.dslib.service
@@ -35,7 +37,6 @@ namespace ds.enovia.dslib.service
 
         public ClassificationServices(string _enoviaService, IPassportAuthentication passport) : base(_enoviaService, passport)
         {
-
         }
 
         //Gets either the 'reverse classification path (dslib:ReverseClassificationMask)' of the given Classified Item object.
@@ -74,38 +75,23 @@ namespace ds.enovia.dslib.service
             }
 
             return await requestResponse.Content.ReadFromJsonAsync<ItemsClassificationAttributes>();
-            
         }
 
         //etches the object reference of the Classified Item of a given external object (public http resource) if it exists.
-        public async Task<ClassifiedItemInstance> Locate(ItemInstance itemInstance)
+        public async Task<ClassifiedItemInstance> Locate(BusinessObjectIdentifier itemInstance)
         {
             string classifiedItemResource = string.Format("{0}{1}", BASE_RESOURCE, CLASSIFIED_ITEM_LOCATE);
 
-            string payload = itemInstance.toJson();
+            string payload = JsonSerializer.Serialize<object>(itemInstance);
 
             HttpResponseMessage requestResponse = await PostAsync(classifiedItemResource, null, null, payload);
 
             if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
             {
-                if (requestResponse.StatusCode == System.Net.HttpStatusCode.BadRequest)
-                {
-                    try
-                    {
-                        ClassifiedItemLocationResponseException rex =  new ClassifiedItemLocationResponseException(requestResponse);
-
-                        string message = rex.message;
-                        
-                    }
-                    catch
-                    {
-                    }
-                }
-                //handle according to established exception policy
-                return null;
+                throw new ClassifiedItemLocationResponseException(requestResponse);
             }
 
-            return await requestResponse.Content.ReadFromJsonAsync<ClassifiedItemInstance>();            
+            return await requestResponse.Content.ReadFromJsonAsync<ClassifiedItemInstance>();
         }
     }
 }
