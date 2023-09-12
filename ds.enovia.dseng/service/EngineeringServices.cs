@@ -192,7 +192,7 @@ namespace ds.enovia.dseng.service
       }
 
       #region Bulk Fetch
-      public async Task<IList<EngineeringItem>> BulkFetchAsDefaultMask(string[] _engineeringItemIds, EngineeringItemFields _engItemFields = null)
+      public async Task<(IList<EngineeringItem>, IList<string>)> BulkFetchAsDefaultMask(string[] _engineeringItemIds, EngineeringItemFields _engItemFields = null)
       {
          Dictionary<string, string> queryParams = new Dictionary<string, string>();
          queryParams.Add("$mask", "dskern:Mask.Default");
@@ -204,7 +204,7 @@ namespace ds.enovia.dseng.service
          return await BulkFetch<EngineeringItem>(_engineeringItemIds, queryParams);
       }
 
-      public async Task<IList<EngineeringItemCommon>> BulkFetchAsCommonMask(string[] _engineeringItemIds, EngineeringItemFields _engItemFields = null)
+      public async Task<(IList<EngineeringItemCommon>, IList<string>)> BulkFetchAsCommonMask(string[] _engineeringItemIds, EngineeringItemFields _engItemFields = null)
       {
          Dictionary<string, string> queryParams = new Dictionary<string, string>();
          queryParams.Add("$mask", "dsmveng:EngItemMask.Common");
@@ -216,7 +216,7 @@ namespace ds.enovia.dseng.service
          return await BulkFetch<EngineeringItemCommon>(_engineeringItemIds, queryParams);
       }
 
-      public async Task<IList<EngineeringItem>> BulkFetchAsDetailMask(string[] _engineeringItemIds, EngineeringItemFields _engItemFields = null)
+      public async Task<(IList<EngineeringItem>, IList<string>)> BulkFetchAsDetailMask(string[] _engineeringItemIds, EngineeringItemFields _engItemFields = null)
       {
          Dictionary<string, string> queryParams = new Dictionary<string, string>();
          queryParams.Add("$mask", "dsmveng:EngItemMask.Details");
@@ -228,7 +228,7 @@ namespace ds.enovia.dseng.service
          return await BulkFetch<EngineeringItem>(_engineeringItemIds, queryParams);
       }
 
-      private async Task<IList<T>> BulkFetch<T>(string[] _engineeringItemIds, Dictionary<string, string> _queryParams = null) where T : Item
+      private async Task<(IList<T>, IList<string>)> BulkFetch<T>(string[] _engineeringItemIds, Dictionary<string, string> _queryParams = null) where T : Item
       {
          string bulkFetchResource = string.Format("{0}/bulkfetch", GetBaseResource());
 
@@ -236,15 +236,15 @@ namespace ds.enovia.dseng.service
 
          HttpResponseMessage requestResponse = await PostAsync(bulkFetchResource, _queryParams, null, payload);
 
-         if (requestResponse.StatusCode != System.Net.HttpStatusCode.OK)
+         if (!requestResponse.IsSuccessStatusCode)
          {
             //handle according to established exception policy
             throw (new BulkFetchException(requestResponse));
          }
 
-         NlsLabeledItemSet<T> responseContent = await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<T>>();
+         NlsLabeledBulkItemSet<T> responseContent = await requestResponse.Content.ReadFromJsonAsync<NlsLabeledBulkItemSet<T>>();
 
-         return responseContent.member;
+         return (responseContent.member, responseContent.nonmembers);
       }
       #endregion
 
