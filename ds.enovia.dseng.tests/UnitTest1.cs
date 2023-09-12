@@ -223,7 +223,7 @@ namespace ds.enovia.dseng.tests
       }
 
       #region Bulk Fetch Tests
-      [TestCase("AAA27")]
+      [TestCase("AAA27 - AG")]
       public async Task Get_BulkFetch(string _searchText)
       {
          #region Arrange
@@ -249,15 +249,15 @@ namespace ds.enovia.dseng.tests
          {
             for (int i = 0; i < bulkFetchLists.Count; i++)
             {
-               IList<EngineeringItem> resultAsDefaultMask = await engineeringServices.BulkFetchAsDefaultMask(bulkFetchLists[i].ToArray());
+               (IList<EngineeringItem> resultAsDefaultMask, IList<string> errorDefaultMaskIds) = await engineeringServices.BulkFetchAsDefaultMask(bulkFetchLists[i].ToArray());
 
                Assert.AreEqual(bulkFetchLists[i].Count, resultAsDefaultMask.Count);
 
-               IList<EngineeringItemCommon> resultAsCommonMask = await engineeringServices.BulkFetchAsCommonMask(bulkFetchLists[i].ToArray());
+               (IList<EngineeringItemCommon> resultAsCommonMask, IList<string> errorCommonMaskIds) = await engineeringServices.BulkFetchAsCommonMask(bulkFetchLists[i].ToArray());
 
                Assert.AreEqual(bulkFetchLists[i].Count, resultAsCommonMask.Count);
 
-               IList<EngineeringItem> resultAsDetailMask = await engineeringServices.BulkFetchAsDetailMask(bulkFetchLists[i].ToArray());
+               (IList<EngineeringItem> resultAsDetailMask, IList<string> errorDetailMaskIds) = await engineeringServices.BulkFetchAsDetailMask(bulkFetchLists[i].ToArray());
 
                Assert.AreEqual(bulkFetchLists[i].Count, resultAsDetailMask.Count);
             }
