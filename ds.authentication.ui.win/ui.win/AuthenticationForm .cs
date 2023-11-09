@@ -73,8 +73,18 @@ namespace ds.authentication.ui.win
 
                 SecurityContextSelection securityContextSelection = new SecurityContextSelection();
 
-                securityContextSelection.Initialize(GetSecurityContextList(userInfo.collabspaces));
-                securityContextSelection.SelectedContext = userInfo.preferredcredentials.ToString();
+               List<string> securityContextList =  GetSecurityContextList(userInfo.collabspaces);
+
+               securityContextSelection.Initialize(securityContextList);
+
+               if ((userInfo.preferredcredentials.collabspace == null) || ((userInfo.preferredcredentials.role == null)) || (userInfo.preferredcredentials.organization == null))
+               {
+                  securityContextSelection.SelectedContext = securityContextList[0];
+               }
+               else
+               {
+                  securityContextSelection.SelectedContext = userInfo.preferredcredentials.ToString();
+               }
 
                 if (DialogResult.OK != securityContextSelection.ShowDialog())
                 {
