@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Authors>Dassault Systèmes - EMED CPE</Authors>
@@ -102,8 +102,8 @@
   
 
   <ItemGroup>
-    <PackageReference Include="ds.authentication" Version="2.0.1" />
-    <PackageReference Include="ds.enovia" Version="2.0.2" />
+    <PackageReference Include="ds.authentication" Version="2.0.4" />
+    <PackageReference Include="ds.enovia" Version="2.0.4" />
   </ItemGroup>
 
 </Project>
