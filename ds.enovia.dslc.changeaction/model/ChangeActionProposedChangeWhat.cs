@@ -21,5 +21,6 @@ namespace ds.enovia.dslc.changeaction.model
     {
         public string internalid { get; set; }
         public string what { get; set; }
-    }
+        public string why { get; set; }
+   }
 }

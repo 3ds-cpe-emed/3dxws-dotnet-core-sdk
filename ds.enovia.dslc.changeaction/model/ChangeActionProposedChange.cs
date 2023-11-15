@@ -21,10 +21,12 @@ namespace ds.enovia.dslc.changeaction.model
     public class ChangeActionProposedChange
     {
         public string internalid { get; set; } // e.g "5B0DBD560C9F000060463C43001BD3B4",
+        public string why { get; set; }
         public string status { get; set; } // e.g. "Not started",
         public ChangeActionProposedChangeWhere where { get; set; }
         public string target { get; set; }
         public List<ChangeActionProposedChangeWhat> whats { get; set; }
 
-    }
+        public ChangeActionProposedChangeArgument arguments { get; set; }
+   }
 }

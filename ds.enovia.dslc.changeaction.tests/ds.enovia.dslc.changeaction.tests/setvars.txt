@@ -1,0 +1,6 @@
+﻿setx DS3DXWS_AUTH_USERNAME ABC
+setx DS3DXWS_AUTH_PASSWORD ******
+
+setx DS3DXWS_AUTH_PASSPORT https://eu1-ds-iam.3dexperience.3ds.com
+setx DS3DXWS_AUTH_ENOVIA https://r1132100XXXXXX-eu1-space.3dexperience.3ds.com/enovia
+setx DS3DXWS_AUTH_TENANT R1132100XXXXXX

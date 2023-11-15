@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------------------------------------------------------------
-// Copyright 2020 Dassault Systèmes - CPE EMED
+// Copyright 2023 Dassault Systèmes - CPE EMED
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
 // files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify,
@@ -14,16 +14,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //------------------------------------------------------------------------------------------------------------------------------------
 
-using ds.enovia.common.model;
-using System.Collections.Generic;
+using ds.enovia.common.exception;
+using System.Net.Http;
 
-namespace ds.enovia.dslc.changeaction.model
+namespace ds.enovia.dslc.changeaction.exception
 {
-    public class ChangeActionMembers
+   internal class SearchChangeActionException : ResponseException
     {
-        public List<string> assignees { get; set; }
-        public List<string> reviewers { get; set; }
-        public List<string> followers { get; set; }
-        public List<BusinessObjectIdentifier> routeTemplates { get; set; }
+      public SearchChangeActionException(HttpResponseMessage _response) : base(_response)
+      { }
    }
 }
