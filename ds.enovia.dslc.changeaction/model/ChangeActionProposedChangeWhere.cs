@@ -14,13 +14,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //------------------------------------------------------------------------------------------------------------------------------------
 
+using ds.enovia.common.model;
+
 namespace ds.enovia.dslc.changeaction.model
 {
-    public class ChangeActionProposedChangeWhere
+    public class ChangeActionProposedChangeWhere : BusinessObjectIdentifier
     {
-        public string source { get; set; }
-        public string type { get; set; }
-        public string identifier { get; set; }
-        public string relativePath { get; set; } 
     }
 }

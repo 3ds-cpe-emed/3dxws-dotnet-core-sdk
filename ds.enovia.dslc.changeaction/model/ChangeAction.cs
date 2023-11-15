@@ -14,6 +14,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //------------------------------------------------------------------------------------------------------------------------------------
 
+using ds.enovia.common.model;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -24,6 +25,7 @@ namespace ds.enovia.dslc.changeaction.model
         public string id { get; set;} //physical id
         public string cestamp { get; set;}
         public string policy { get; set; } //e.g. "Change Action"
+        public string type { get; set;}
         public string description { get; set; } //
         public string title { get; set; } //e.g. "CA - some summary title"
         public string name { get; set; } //e.g. "CA-36236428-00000006"
@@ -47,7 +49,12 @@ namespace ds.enovia.dslc.changeaction.model
         public ChangeActionMembers members { get; set; }
         public List<ChangeActionProposedChange> proposedChanges { get; set; }
         public List<ChangeActionRealizedChange> realizedChanges { get; set; }
-        public List<object> referentials { get; set; }
-        public List<object> contexts { get; set; }
-    }
+        public List<BusinessObjectIdentifier> referentials { get; set; }
+        public List<BusinessObjectIdentifier> contexts { get; set; }
+        public List<BusinessObjectIdentifier> isFlowDownOf { get; set; }
+        public List<BusinessObjectIdentifier> isFlowDownIn { get; set; }
+
+        [JsonPropertyName("dslc:ChangeActionEnterpriseAttributes")]
+        public Dictionary<string,object> EnterpriseAttributes { get; set; }
+   }
 }

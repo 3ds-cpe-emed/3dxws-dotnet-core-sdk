@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------------------------------------------------------------
-// Copyright 2020 Dassault Systèmes - CPE EMED
+// Copyright 2023 Dassault Systèmes - CPE EMED
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
 // files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify,
@@ -14,19 +14,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //------------------------------------------------------------------------------------------------------------------------------------
 
+using ds.enovia.common.model;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace ds.enovia.dslc.changeaction.model
 {
-    public class ChangeActionProposedChange
-    {
-        public string internalid { get; set; } // e.g "5B0DBD560C9F000060463C43001BD3B4",
-        public string why { get; set; }
-        public string status { get; set; } // e.g. "Not started",
-        public ChangeActionProposedChangeWhere where { get; set; }
-        public string target { get; set; }
-        public List<ChangeActionProposedChangeWhat> whats { get; set; }
-
-        public ChangeActionProposedChangeArgument arguments { get; set; }
+   public class SearchChangeActionResponse
+   {
+      [JsonPropertyName("changeAction")]
+      public List<BusinessObjectIdentifier> ChangeAction { get; set; }
    }
 }
