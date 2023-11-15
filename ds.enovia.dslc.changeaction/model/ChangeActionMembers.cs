@@ -14,6 +14,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //------------------------------------------------------------------------------------------------------------------------------------
 
+using ds.enovia.common.model;
 using System.Collections.Generic;
 
 namespace ds.enovia.dslc.changeaction.model
@@ -23,5 +24,6 @@ namespace ds.enovia.dslc.changeaction.model
         public List<string> assignees { get; set; }
         public List<string> reviewers { get; set; }
         public List<string> followers { get; set; }
-    }
+        public List<BusinessObjectIdentifier> routeTemplates { get; set; }
+   }
 }
