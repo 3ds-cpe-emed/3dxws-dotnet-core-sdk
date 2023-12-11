@@ -103,7 +103,7 @@ namespace ds.enovia.dseng.service
         #endregion
 
         #region Create Engineering Item
-        public async Task<NlsLabeledItemSet<EngineeringItem>> CreateEngineeringItem(EngineeringItemCreate _engItem)
+        public async Task<NlsLabeledItemSet<EngineeringItem>> CreateEngineeringItem(EngineeringItemCreate _engItem, bool _multivaluated = false)
         {
             CreateItemSet itemsCreate = new CreateItemSet();
             List<object> items = new List<object>()
@@ -112,10 +112,10 @@ namespace ds.enovia.dseng.service
             };
             itemsCreate.items = items;
 
-            return await CreateEngineeringItems(itemsCreate);
+            return await CreateEngineeringItems(itemsCreate, _multivaluated);
         }
 
-        public async Task<NlsLabeledItemSet<EngineeringItem>> CreateEngineeringItems(CreateItemSet _engItemSet)
+        public async Task<NlsLabeledItemSet<EngineeringItem>> CreateEngineeringItems(CreateItemSet _engItemSet, bool _multivaluated = false)
         {
             string createEngineeringItemEndpoint = string.Format("{0}", GetBaseResource());
 
@@ -124,6 +124,10 @@ namespace ds.enovia.dseng.service
             // masks
             Dictionary<string, string> queryParams = new Dictionary<string, string>();
             queryParams.Add("$mask", engItemMask.GetString());
+            if (_multivaluated)
+            {
+                queryParams.Add("$mva", "true");
+            }
 
             string engItemSetPayload = JsonSerializer.Serialize(_engItemSet);
             HttpResponseMessage requestResponse = await PostAsync(createEngineeringItemEndpoint, _body: engItemSetPayload);
@@ -137,32 +141,40 @@ namespace ds.enovia.dseng.service
             return await requestResponse.Content.ReadFromJsonAsync<NlsLabeledItemSet<EngineeringItem>>();
         }
 
-      #endregion
+        #endregion
 
-      public async Task<EngineeringItemCommon> GetEngineeringItemCommon(string _engineeringItemId, EngineeringItemFields _engItemFields = null)
-      {
-         Dictionary<string, string> queryParams = new Dictionary<string, string>();
-         queryParams.Add("$mask", "dsmveng:EngItemMask.Common");
-         if (_engItemFields != null)
-         {
-            queryParams.Add("$fields", _engItemFields.ToString());
-         }
-
-         return await _GetEngineeringItem<EngineeringItemCommon>(_engineeringItemId, queryParams);
-      }
-
-      public async Task<EngineeringItem> GetEngineeringItemDetails(EngineeringItem _item, EngineeringItemFields _engItemFields = null)
+        public async Task<EngineeringItemCommon> GetEngineeringItemCommon(string _engineeringItemId, EngineeringItemFields _engItemFields = null, bool _multivaluated = false)
         {
-            return await GetEngineeringItemDetails(_item.id, _engItemFields);
+            Dictionary<string, string> queryParams = new Dictionary<string, string>();
+            queryParams.Add("$mask", "dsmveng:EngItemMask.Common");
+            if (_engItemFields != null)
+            {
+                queryParams.Add("$fields", _engItemFields.ToString());
+            }
+            if (_multivaluated)
+            {
+                queryParams.Add("$mva", "true");
+            }
+
+            return await _GetEngineeringItem<EngineeringItemCommon>(_engineeringItemId, queryParams);
         }
 
-        public async Task<EngineeringItem> GetEngineeringItemDetails(string _engineeringItemId, EngineeringItemFields _engItemFields = null)
+        public async Task<EngineeringItem> GetEngineeringItemDetails(EngineeringItem _item, EngineeringItemFields _engItemFields = null, bool _multivaluated = false)
+        {
+            return await GetEngineeringItemDetails(_item.id, _engItemFields, _multivaluated);
+        }
+
+        public async Task<EngineeringItem> GetEngineeringItemDetails(string _engineeringItemId, EngineeringItemFields _engItemFields = null, bool _multivaluated = false)
         {
             Dictionary<string, string> queryParams = new Dictionary<string, string>();
             queryParams.Add("$mask", "dsmveng:EngItemMask.Details");
             if (_engItemFields != null)
             {
                 queryParams.Add("$fields", _engItemFields.ToString());
+            }
+            if (_multivaluated)
+            {
+                queryParams.Add("$mva", "true");
             }
 
             return await _GetEngineeringItem<EngineeringItem>(_engineeringItemId, queryParams);
@@ -248,15 +260,19 @@ namespace ds.enovia.dseng.service
       }
       #endregion
 
-      public async Task<EngineeringItem> PatchEngineeringItemAttributes(string _id, EngineeringItemPatchAttributes _atts, bool _details = true)
+      public async Task<EngineeringItem> PatchEngineeringItemAttributes(string _id, EngineeringItemPatchAttributes _atts, bool _details = true, bool _multivaluated = false)
         {
             string patchEngineeringItemEndpoint = string.Format("{0}/{1}", GetBaseResource(), _id);
 
             Dictionary<string, string> queryParams = null;
             if (_details)
             {
-                queryParams = new Dictionary<string, string>();
-                queryParams.Add("$mask", "dsmveng:EngItemMask.Details");
+                queryParams = new Dictionary<string, string> { { "$mask", "dsmveng:EngItemMask.Details" } };
+            }
+            if (_multivaluated)
+            {
+                if (queryParams == null) { queryParams = new Dictionary<string, string>(); }
+                queryParams.Add("$mva", "true");
             }
 
             string bodyPatchMessage = JsonSerializer.Serialize(_atts);//.toJson();
@@ -278,7 +294,7 @@ namespace ds.enovia.dseng.service
             return null;
         }
 
-        public async Task<EngineeringItem> UpdateEngineeringItem(EngineeringItem _item, bool _details = false)
+        public async Task<EngineeringItem> UpdateEngineeringItem(EngineeringItem _item, bool _details = false, bool _multivaluated = false)
         {
             string patchEngineeringItemEndpoint = string.Format("{0}/{1}", GetBaseResource(), _item.id);
 
@@ -298,6 +314,11 @@ namespace ds.enovia.dseng.service
             if (_details)
             {
                queryParams = new Dictionary<string, string> { { "$mask", "dsmveng:EngItemMask.Details" } };
+            }
+            if (_multivaluated)
+            {
+                if (queryParams == null) { queryParams = new Dictionary<string, string>(); }
+                queryParams.Add("$mva", "true");
             }
 
             HttpResponseMessage requestResponse = await PatchAsync(patchEngineeringItemEndpoint, queryParams, null, messageBody);
