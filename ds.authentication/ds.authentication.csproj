@@ -13,7 +13,7 @@
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/3ds-cpe-emed/3dxws-dotnet-core-sdk</PackageProjectUrl>
     <PackageTags>3DEXPERIENCE</PackageTags>
-    <PackageReleaseNotes>fix: package information</PackageReleaseNotes>
+    <PackageReleaseNotes>fix: issue #72 (authenticationexception)</PackageReleaseNotes>
     <Product>ds.authentication</Product>
     <Description>3DEXPERIENCE Dotnet Core SDK for Authentication web services</Description>
     <PackageId>ds.authentication</PackageId>
