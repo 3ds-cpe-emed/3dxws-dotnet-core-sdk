@@ -56,7 +56,7 @@ namespace ds.authentication
 
                 foreach (Cookie cookie in cookies)
                 {
-                    if (cookie.Name == CAS_TICKET_NAME)
+                    if ((cookie.Name != null) && ((cookie.Name == CAS_TICKET_NAME) || (cookie.Name.StartsWith(CAS_TICKET_NAME))))
                     {
                         return true;
                     }
@@ -67,7 +67,7 @@ namespace ds.authentication
 
                 foreach (Cookie cookie in cookies)
                 {
-                    if (cookie.Name == CAS_TICKET_NAME)
+                    if ((cookie.Name != null) && ((cookie.Name == CAS_TICKET_NAME) || (cookie.Name.StartsWith(CAS_TICKET_NAME))))
                     {
                         return true;
                     }
